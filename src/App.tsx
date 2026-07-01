@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { Dog, DogUpdate, Sponsorship } from './types';
 import { mockDogs, mockSponsorships, mockUpdates } from './services/mockData';
 import { Header } from './components/Header';
@@ -6,11 +6,12 @@ import { DogCard } from './components/DogCard';
 import { DogDetailModal } from './components/DogDetailModal';
 import { AdminDashboard } from './components/AdminDashboard';
 import { Heart, Search, Users, Sparkles } from 'lucide-react';
+import { supabase } from './services/supabaseClient';
 
 function App() {
-  const [dogs, setDogs] = useState<Dog[]>(mockDogs);
-  const [sponsorships, setSponsorships] = useState<Sponsorship[]>(mockSponsorships);
-  const [updates, setUpdates] = useState<DogUpdate[]>(mockUpdates);
+  const [dogs, setDogs] = useState<Dog[]>(supabase ? [] : mockDogs);
+  const [sponsorships, setSponsorships] = useState<Sponsorship[]>(supabase ? [] : mockSponsorships);
+  const [updates, setUpdates] = useState<DogUpdate[]>(supabase ? [] : mockUpdates);
   
   const [selectedDog, setSelectedDog] = useState<Dog | null>(null);
   const [currentView, setCurrentView] = useState<'gallery' | 'admin'>('gallery');
@@ -19,110 +20,483 @@ function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'needs_sponsor' | 'partially_sponsored' | 'fully_sponsored'>('all');
 
+  // Fetch Dogs and Updates on Mount
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!supabase) return;
+      
+      try {
+        const { data: dogsData, error: dogsError } = await supabase
+          .from('dogs')
+          .select('*')
+          .order('created_at', { ascending: false });
+        
+        if (!dogsError && dogsData) {
+          const mappedDogs: Dog[] = dogsData.map(d => ({
+            id: d.id,
+            name: d.name,
+            description: d.description,
+            breed: d.breed,
+            age: d.age,
+            gender: d.gender,
+            status: d.status,
+            targetMonthlySponsorship: d.target_monthly_sponsorship,
+            currentMonthlySponsorship: d.current_monthly_sponsorship,
+            mainImageUrl: d.main_image_url,
+            medicalNeeds: d.medical_needs || undefined,
+            createdAt: d.created_at
+          }));
+          setDogs(mappedDogs);
+        }
+
+        const { data: updatesData, error: updatesError } = await supabase
+          .from('updates')
+          .select('*')
+          .order('created_at', { ascending: false });
+        
+        if (!updatesError && updatesData) {
+          const mappedUpdates: DogUpdate[] = updatesData.map(u => ({
+            id: u.id,
+            dogId: u.dog_id,
+            title: u.title,
+            content: u.content,
+            imageUrl: u.image_url || undefined,
+            createdAt: u.created_at
+          }));
+          setUpdates(mappedUpdates);
+        }
+      } catch (err) {
+        console.error('Error fetching initial data:', err);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Fetch Sponsorships when in admin dashboard
+  useEffect(() => {
+    const fetchSponsorships = async () => {
+      if (!supabase || currentView !== 'admin') return;
+      
+      try {
+        const { data, error } = await supabase
+          .from('sponsorships')
+          .select('*')
+          .order('created_at', { ascending: false });
+        
+        if (!error && data) {
+          const mappedSpons: Sponsorship[] = data.map(s => ({
+            id: s.id,
+            dogId: s.dog_id,
+            sponsorName: s.sponsor_name,
+            sponsorEmail: s.sponsor_email,
+            monthlyAmount: s.monthly_amount,
+            status: s.status,
+            startDate: s.start_date,
+            createdAt: s.created_at
+          }));
+          setSponsorships(mappedSpons);
+        }
+      } catch (err) {
+        console.error('Error fetching sponsorships:', err);
+      }
+    };
+
+    fetchSponsorships();
+  }, [currentView]);
+
   // Handlers for App state
-  const handleAddSponsorship = (newSpons: Omit<Sponsorship, 'id' | 'createdAt' | 'status' | 'startDate'>) => {
-    const sponsorship: Sponsorship = {
-      ...newSpons,
-      id: `spons-${Date.now()}`,
-      status: 'pending', // Starts as pending until approved by admin
-      startDate: new Date().toISOString(),
-      createdAt: new Date().toISOString(),
-    };
+  const handleAddSponsorship = async (newSpons: Omit<Sponsorship, 'id' | 'createdAt' | 'status' | 'startDate'>) => {
+    if (supabase) {
+      try {
+        const { data, error } = await supabase
+          .from('sponsorships')
+          .insert([{
+            dog_id: newSpons.dogId,
+            sponsor_name: newSpons.sponsorName,
+            sponsor_email: newSpons.sponsorEmail,
+            monthly_amount: newSpons.monthlyAmount,
+            status: 'pending'
+          }])
+          .select();
+
+        if (!error && data && data[0]) {
+          const s = data[0];
+          const mapped: Sponsorship = {
+            id: s.id,
+            dogId: s.dog_id,
+            sponsorName: s.sponsor_name,
+            sponsorEmail: s.sponsor_email,
+            monthlyAmount: s.monthly_amount,
+            status: s.status,
+            startDate: s.start_date,
+            createdAt: s.created_at
+          };
+          setSponsorships(prev => [mapped, ...prev]);
+        } else if (error) {
+          console.error('Error inserting sponsorship:', error);
+        }
+      } catch (err) {
+        console.error('Sponsorship insert exception:', err);
+      }
+    } else {
+      const sponsorship: Sponsorship = {
+        ...newSpons,
+        id: `spons-${Date.now()}`,
+        status: 'pending',
+        startDate: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
+      };
+      setSponsorships((prev) => [sponsorship, ...prev]);
+    }
+  };
+
+  const handleApproveSponsorship = async (id: string) => {
+    if (supabase) {
+      try {
+        const spons = sponsorships.find(s => s.id === id);
+        if (!spons || spons.status !== 'pending') return;
+
+        // 1. Update sponsorship status
+        const { error: sponsError } = await supabase
+          .from('sponsorships')
+          .update({ status: 'active' })
+          .eq('id', id);
+
+        if (sponsError) {
+          console.error('Error updating sponsorship:', sponsError);
+          return;
+        }
+
+        // 2. Find dog to compute new values
+        const dog = dogs.find(d => d.id === spons.dogId);
+        if (!dog) return;
+
+        const newFunding = dog.currentMonthlySponsorship + spons.monthlyAmount;
+        const newStatus = newFunding >= dog.targetMonthlySponsorship ? 'fully_sponsored' : 'partially_sponsored';
+
+        // 3. Update dog funding in DB
+        const { error: dogError } = await supabase
+          .from('dogs')
+          .update({
+            current_monthly_sponsorship: newFunding,
+            status: newStatus
+          })
+          .eq('id', dog.id);
+
+        if (!dogError) {
+          setSponsorships(prev => prev.map(s => s.id === id ? { ...s, status: 'active' } : s));
+          setDogs(prev => prev.map(d => d.id === dog.id ? { ...d, currentMonthlySponsorship: newFunding, status: newStatus } : d));
+        } else {
+          console.error('Error updating dog funding:', dogError);
+        }
+      } catch (err) {
+        console.error('Approval exception:', err);
+      }
+    } else {
+      setSponsorships((prevSpons) =>
+        prevSpons.map((spons) => {
+          if (spons.id === id && spons.status === 'pending') {
+            setDogs((prevDogs) =>
+              prevDogs.map((dog) => {
+                if (dog.id === spons.dogId) {
+                  const newFunding = dog.currentMonthlySponsorship + spons.monthlyAmount;
+                  const newStatus = newFunding >= dog.targetMonthlySponsorship ? 'fully_sponsored' : 'partially_sponsored';
+                  return { ...dog, currentMonthlySponsorship: newFunding, status: newStatus };
+                }
+                return dog;
+              })
+            );
+            return { ...spons, status: 'active' };
+          }
+          return spons;
+        })
+      );
+    }
+  };
+
+  const handleCancelSponsorship = async (id: string) => {
+    if (supabase) {
+      try {
+        const spons = sponsorships.find(s => s.id === id);
+        if (!spons) return;
+
+        // 1. Update sponsorship status
+        const { error: sponsError } = await supabase
+          .from('sponsorships')
+          .update({ status: 'cancelled' })
+          .eq('id', id);
+
+        if (sponsError) {
+          console.error('Error cancelling sponsorship:', sponsError);
+          return;
+        }
+
+        // 2. If it was active, subtract from dog funding
+        if (spons.status === 'active') {
+          const dog = dogs.find(d => d.id === spons.dogId);
+          if (!dog) return;
+
+          const newFunding = Math.max(0, dog.currentMonthlySponsorship - spons.monthlyAmount);
+          const newStatus =
+            newFunding >= dog.targetMonthlySponsorship
+              ? 'fully_sponsored'
+              : newFunding > 0
+              ? 'partially_sponsored'
+              : 'needs_sponsor';
+
+          const { error: dogError } = await supabase
+            .from('dogs')
+            .update({
+              current_monthly_sponsorship: newFunding,
+              status: newStatus
+            })
+            .eq('id', dog.id);
+
+          if (!dogError) {
+            setDogs(prev => prev.map(d => d.id === dog.id ? { ...d, currentMonthlySponsorship: newFunding, status: newStatus } : d));
+          } else {
+            console.error('Error updating dog after cancel:', dogError);
+          }
+        }
+        setSponsorships(prev => prev.map(s => s.id === id ? { ...s, status: 'cancelled' } : s));
+      } catch (err) {
+        console.error('Cancel exception:', err);
+      }
+    } else {
+      setSponsorships((prevSpons) =>
+        prevSpons.map((spons) => {
+          if (spons.id === id && spons.status === 'active') {
+            setDogs((prevDogs) =>
+              prevDogs.map((dog) => {
+                if (dog.id === spons.dogId) {
+                  const newFunding = Math.max(0, dog.currentMonthlySponsorship - spons.monthlyAmount);
+                  const newStatus =
+                    newFunding >= dog.targetMonthlySponsorship
+                      ? 'fully_sponsored'
+                      : newFunding > 0
+                      ? 'partially_sponsored'
+                      : 'needs_sponsor';
+                  return { ...dog, currentMonthlySponsorship: newFunding, status: newStatus };
+                }
+                return dog;
+              })
+            );
+            return { ...spons, status: 'cancelled' };
+          } else if (spons.id === id && spons.status === 'pending') {
+            return { ...spons, status: 'cancelled' };
+          }
+          return spons;
+        })
+      );
+    }
+  };
+
+  const handleAddDog = async (newDog: Omit<Dog, 'id' | 'createdAt' | 'currentMonthlySponsorship' | 'status'>) => {
+    if (supabase) {
+      try {
+        const { data, error } = await supabase
+          .from('dogs')
+          .insert([{
+            name: newDog.name,
+            breed: newDog.breed,
+            age: newDog.age,
+            gender: newDog.gender,
+            description: newDog.description,
+            medical_needs: newDog.medicalNeeds || null,
+            target_monthly_sponsorship: newDog.targetMonthlySponsorship,
+            main_image_url: newDog.mainImageUrl
+          }])
+          .select();
+
+        if (!error && data && data[0]) {
+          const d = data[0];
+          const mapped: Dog = {
+            id: d.id,
+            name: d.name,
+            description: d.description,
+            breed: d.breed,
+            age: d.age,
+            gender: d.gender,
+            status: d.status,
+            targetMonthlySponsorship: d.target_monthly_sponsorship,
+            currentMonthlySponsorship: d.current_monthly_sponsorship,
+            mainImageUrl: d.main_image_url,
+            medicalNeeds: d.medical_needs || undefined,
+            createdAt: d.created_at
+          };
+          setDogs(prev => [mapped, ...prev]);
+        } else if (error) {
+          console.error('Error inserting dog:', error);
+        }
+      } catch (err) {
+        console.error('Dog insert exception:', err);
+      }
+    } else {
+      const dog: Dog = {
+        ...newDog,
+        id: `dog-${Date.now()}`,
+        currentMonthlySponsorship: 0,
+        status: 'needs_sponsor',
+        createdAt: new Date().toISOString(),
+      };
+      setDogs((prev) => [dog, ...prev]);
+    }
+  };
+
+  const handleEditDog = async (updatedDog: Dog) => {
+    if (supabase) {
+      try {
+        const { error } = await supabase
+          .from('dogs')
+          .update({
+            name: updatedDog.name,
+            breed: updatedDog.breed,
+            age: updatedDog.age,
+            gender: updatedDog.gender,
+            description: updatedDog.description,
+            medical_needs: updatedDog.medicalNeeds || null,
+            target_monthly_sponsorship: updatedDog.targetMonthlySponsorship,
+            main_image_url: updatedDog.mainImageUrl
+          })
+          .eq('id', updatedDog.id);
+
+        if (!error) {
+          setDogs(prev => prev.map((d) => (d.id === updatedDog.id ? updatedDog : d)));
+        } else {
+          console.error('Error updating dog:', error);
+        }
+      } catch (err) {
+        console.error('Dog update exception:', err);
+      }
+    } else {
+      setDogs((prev) => prev.map((d) => (d.id === updatedDog.id ? updatedDog : d)));
+    }
+  };
+
+  const handleDeleteDog = async (id: string) => {
+    if (supabase) {
+      try {
+        const { error } = await supabase
+          .from('dogs')
+          .delete()
+          .eq('id', id);
+
+        if (!error) {
+          setDogs((prev) => prev.filter((d) => d.id !== id));
+          setSponsorships((prev) => prev.filter((s) => s.dogId !== id));
+          setUpdates((prev) => prev.filter((u) => u.dogId !== id));
+        } else {
+          console.error('Error deleting dog:', error);
+        }
+      } catch (err) {
+        console.error('Dog delete exception:', err);
+      }
+    } else {
+      setDogs((prev) => prev.filter((d) => d.id !== id));
+      setSponsorships((prev) => prev.filter((s) => s.dogId !== id));
+      setUpdates((prev) => prev.filter((u) => u.dogId !== id));
+    }
+  };
+
+  const handleAddUpdate = async (newUpdate: Omit<DogUpdate, 'id' | 'createdAt'>) => {
+    if (supabase) {
+      try {
+        const { data, error } = await supabase
+          .from('updates')
+          .insert([{
+            dog_id: newUpdate.dogId,
+            title: newUpdate.title,
+            content: newUpdate.content,
+            image_url: newUpdate.imageUrl || null
+          }])
+          .select();
+
+        if (!error && data && data[0]) {
+          const u = data[0];
+          const mapped: DogUpdate = {
+            id: u.id,
+            dogId: u.dog_id,
+            title: u.title,
+            content: u.content,
+            imageUrl: u.image_url || undefined,
+            createdAt: u.created_at
+          };
+          setUpdates(prev => [mapped, ...prev]);
+        } else if (error) {
+          console.error('Error inserting update:', error);
+        }
+      } catch (err) {
+        console.error('Update insert exception:', err);
+      }
+    } else {
+      const update: DogUpdate = {
+        ...newUpdate,
+        id: `update-${Date.now()}`,
+        createdAt: new Date().toISOString(),
+      };
+      setUpdates((prev) => [update, ...prev]);
+    }
+  };
+
+  // Seed Database with Demo Dogs
+  const handleSeedDatabase = async () => {
+    if (!supabase) return;
     
-    setSponsorships((prev) => [sponsorship, ...prev]);
-  };
+    try {
+      for (const mockDog of mockDogs) {
+        const { data, error } = await supabase
+          .from('dogs')
+          .insert([{
+            name: mockDog.name,
+            breed: mockDog.breed,
+            age: mockDog.age,
+            gender: mockDog.gender,
+            description: mockDog.description,
+            medical_needs: mockDog.medicalNeeds || null,
+            target_monthly_sponsorship: mockDog.targetMonthlySponsorship,
+            current_monthly_sponsorship: mockDog.currentMonthlySponsorship,
+            main_image_url: mockDog.mainImageUrl
+          }])
+          .select();
 
-  const handleApproveSponsorship = (id: string) => {
-    setSponsorships((prevSpons) =>
-      prevSpons.map((spons) => {
-        if (spons.id === id && spons.status === 'pending') {
-          // Adjust the dog's current funding
-          setDogs((prevDogs) =>
-            prevDogs.map((dog) => {
-              if (dog.id === spons.dogId) {
-                const newFunding = dog.currentMonthlySponsorship + spons.monthlyAmount;
-                const newStatus =
-                  newFunding >= dog.targetMonthlySponsorship
-                    ? 'fully_sponsored'
-                    : 'partially_sponsored';
-                return {
-                  ...dog,
-                  currentMonthlySponsorship: newFunding,
-                  status: newStatus,
-                };
-              }
-              return dog;
-            })
-          );
-          return { ...spons, status: 'active' };
+        if (!error && data && data[0]) {
+          const dogId = data[0].id;
+          
+          // Seed updates for this dog
+          const dogUpdates = mockUpdates.filter(u => u.dogId === mockDog.id);
+          for (const update of dogUpdates) {
+            await supabase
+              .from('updates')
+              .insert([{
+                dog_id: dogId,
+                title: update.title,
+                content: update.content,
+                image_url: update.imageUrl || null
+              }]);
+          }
+
+          // Seed sponsorships for this dog
+          const dogSpons = mockSponsorships.filter(s => s.dogId === mockDog.id);
+          for (const spons of dogSpons) {
+            await supabase
+              .from('sponsorships')
+              .insert([{
+                dog_id: dogId,
+                sponsor_name: spons.sponsorName,
+                sponsor_email: spons.sponsorEmail,
+                monthly_amount: spons.monthlyAmount,
+                status: spons.status
+              }]);
+          }
         }
-        return spons;
-      })
-    );
-  };
-
-  const handleCancelSponsorship = (id: string) => {
-    setSponsorships((prevSpons) =>
-      prevSpons.map((spons) => {
-        if (spons.id === id && spons.status === 'active') {
-          // Subtract from dog's current funding
-          setDogs((prevDogs) =>
-            prevDogs.map((dog) => {
-              if (dog.id === spons.dogId) {
-                const newFunding = Math.max(0, dog.currentMonthlySponsorship - spons.monthlyAmount);
-                const newStatus =
-                  newFunding >= dog.targetMonthlySponsorship
-                    ? 'fully_sponsored'
-                    : newFunding > 0
-                    ? 'partially_sponsored'
-                    : 'needs_sponsor';
-                return {
-                  ...dog,
-                  currentMonthlySponsorship: newFunding,
-                  status: newStatus,
-                };
-              }
-              return dog;
-            })
-          );
-          return { ...spons, status: 'cancelled' };
-        } else if (spons.id === id && spons.status === 'pending') {
-          return { ...spons, status: 'cancelled' };
-        }
-        return spons;
-      })
-    );
-  };
-
-  const handleAddDog = (newDog: Omit<Dog, 'id' | 'createdAt' | 'currentMonthlySponsorship' | 'status'>) => {
-    const dog: Dog = {
-      ...newDog,
-      id: `dog-${Date.now()}`,
-      currentMonthlySponsorship: 0,
-      status: 'needs_sponsor',
-      createdAt: new Date().toISOString(),
-    };
-    setDogs((prev) => [dog, ...prev]);
-  };
-
-  const handleEditDog = (updatedDog: Dog) => {
-    setDogs((prev) => prev.map((d) => (d.id === updatedDog.id ? updatedDog : d)));
-  };
-
-  const handleDeleteDog = (id: string) => {
-    setDogs((prev) => prev.filter((d) => d.id !== id));
-    // Clean up corresponding sponsorships and updates
-    setSponsorships((prev) => prev.filter((s) => s.dogId !== id));
-    setUpdates((prev) => prev.filter((u) => u.dogId !== id));
-  };
-
-  const handleAddUpdate = (newUpdate: Omit<DogUpdate, 'id' | 'createdAt'>) => {
-    const update: DogUpdate = {
-      ...newUpdate,
-      id: `update-${Date.now()}`,
-      createdAt: new Date().toISOString(),
-    };
-    setUpdates((prev) => [update, ...prev]);
+      }
+      
+      // Reload page to re-fetch the new records
+      window.location.reload();
+    } catch (err) {
+      console.error('Database seeding exception:', err);
+    }
   };
 
   // Filter dogs list
@@ -335,6 +709,7 @@ function App() {
               onApproveSponsorship={handleApproveSponsorship}
               onCancelSponsorship={handleCancelSponsorship}
               onAddUpdate={handleAddUpdate}
+              onSeedDatabase={handleSeedDatabase}
             />
           </main>
         )}

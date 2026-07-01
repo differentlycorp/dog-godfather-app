@@ -12,6 +12,7 @@ interface AdminDashboardProps {
   onApproveSponsorship: (id: string) => void;
   onCancelSponsorship: (id: string) => void;
   onAddUpdate: (update: Omit<DogUpdate, 'id' | 'createdAt'>) => void;
+  onSeedDatabase?: () => Promise<void>;
 }
 
 type Tab = 'dogs' | 'sponsorships' | 'updates';
@@ -25,11 +26,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   onApproveSponsorship,
   onCancelSponsorship,
   onAddUpdate,
+  onSeedDatabase,
 }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [passcode, setPasscode] = useState('');
   const [passcodeError, setPasscodeError] = useState(false);
   const [isLoadingAuth, setIsLoadingAuth] = useState(false);
+  const [isSeeding, setIsSeeding] = useState(false);
   
   const [activeTab, setActiveTab] = useState<Tab>('dogs');
 
@@ -261,9 +264,30 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               </div>
 
               {dogs.length === 0 ? (
-                <div className="text-center p-12 bg-white dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/80 rounded-2xl">
-                  <Heart className="h-8 w-8 text-zinc-300 mx-auto mb-2" />
-                  <p className="text-sm font-semibold text-zinc-500">No dogs registered yet.</p>
+                <div className="text-center p-12 bg-white dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/80 rounded-2xl flex flex-col items-center justify-center gap-4">
+                  <div>
+                    <Heart className="h-8 w-8 text-zinc-300 mx-auto mb-2" />
+                    <p className="text-sm font-semibold text-zinc-500">No dogs registered yet.</p>
+                  </div>
+                  {onSeedDatabase && (
+                    <button
+                      type="button"
+                      disabled={isSeeding}
+                      onClick={async () => {
+                        setIsSeeding(true);
+                        try {
+                          await onSeedDatabase();
+                        } catch (err) {
+                          console.error(err);
+                        } finally {
+                          setIsSeeding(false);
+                        }
+                      }}
+                      className="px-4 py-2 border border-zinc-200 hover:bg-zinc-50 dark:border-zinc-850 dark:hover:bg-zinc-800 text-xs font-bold text-zinc-700 dark:text-zinc-300 rounded-lg cursor-pointer transition-all disabled:opacity-50"
+                    >
+                      {isSeeding ? 'Seeding...' : 'Seed Database with Demo Dogs'}
+                    </button>
+                  )}
                 </div>
               ) : (
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
