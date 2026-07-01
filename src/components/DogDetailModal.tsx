@@ -45,6 +45,7 @@ export const DogDetailModal: React.FC<DogDetailModalProps> = ({
   };
 
   const activeAmount = monthlyAmount === 0 ? parseFloat(customAmount) || 0 : monthlyAmount;
+  const translatedGender = dog.gender === 'male' ? 'Macho' : 'Fêmea';
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
@@ -81,17 +82,17 @@ export const DogDetailModal: React.FC<DogDetailModalProps> = ({
                   <div className="flex items-center justify-between gap-2">
                     <h2 className="text-3xl font-extrabold text-zinc-900 dark:text-white">{dog.name}</h2>
                     <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-500 border border-amber-500/20 capitalize">
-                      {dog.gender} • {dog.age}
+                      {translatedGender} • {dog.age}
                     </span>
                   </div>
                   <p className="text-xs text-zinc-400 mt-1.5 font-semibold tracking-wide uppercase">
-                    Breed: {dog.breed}
+                    Raça: {dog.breed}
                   </p>
                 </div>
 
                 {/* About Bio */}
                 <div className="space-y-2">
-                  <h4 className="text-sm font-bold text-zinc-900 dark:text-white uppercase tracking-wider">About</h4>
+                  <h4 className="text-sm font-bold text-zinc-900 dark:text-white uppercase tracking-wider">História</h4>
                   <p className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
                     {dog.description}
                   </p>
@@ -102,7 +103,7 @@ export const DogDetailModal: React.FC<DogDetailModalProps> = ({
                   <div className="p-4 bg-red-500/5 dark:bg-red-500/10 border border-red-500/10 dark:border-red-500/20 rounded-2xl flex gap-3">
                     <ShieldAlert className="h-5 w-5 text-red-500 shrink-0 mt-0.5" />
                     <div>
-                      <h4 className="text-sm font-bold text-red-600 dark:text-red-400">Special Medical Care</h4>
+                      <h4 className="text-sm font-bold text-red-600 dark:text-red-400">Cuidados Médicos Especiais</h4>
                       <p className="text-xs text-red-700/80 dark:text-red-300/80 mt-1 font-medium leading-normal">
                         {dog.medicalNeeds}
                       </p>
@@ -113,8 +114,8 @@ export const DogDetailModal: React.FC<DogDetailModalProps> = ({
                 {/* Sponsorship Bar */}
                 <div className="bg-zinc-50 dark:bg-zinc-950 p-5 rounded-2xl border border-zinc-200/50 dark:border-zinc-800/50">
                   <div className="flex justify-between items-end text-xs font-semibold mb-2">
-                    <span className="text-zinc-500">Monthly Cost: €{dog.targetMonthlySponsorship}</span>
-                    <span className="text-amber-500">€{dog.currentMonthlySponsorship} funded ({percentSponsored}%)</span>
+                    <span className="text-zinc-500">Custo Mensal: €{dog.targetMonthlySponsorship}</span>
+                    <span className="text-amber-500">€{dog.currentMonthlySponsorship} garantidos ({percentSponsored}%)</span>
                   </div>
                   <div className="w-full h-2.5 bg-zinc-200 dark:bg-zinc-800 rounded-full overflow-hidden mb-4">
                     <div 
@@ -127,7 +128,7 @@ export const DogDetailModal: React.FC<DogDetailModalProps> = ({
                     className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold rounded-xl shadow-lg shadow-amber-500/20 transition-all cursor-pointer transform hover:-translate-y-0.5 active:translate-y-0"
                   >
                     <Heart className="h-4 w-4 fill-current" />
-                    Become {dog.name}'s Godfather
+                    Quero Apadrinhar o/a {dog.name}
                   </button>
                 </div>
               </div>
@@ -135,21 +136,21 @@ export const DogDetailModal: React.FC<DogDetailModalProps> = ({
               // Sponsorship Form View
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-2xl font-extrabold text-zinc-900 dark:text-white">Become a Sponsor</h3>
+                  <h3 className="text-2xl font-extrabold text-zinc-900 dark:text-white">Seja Padrinho / Madrinha</h3>
                   <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
-                    Fill out the form below to support <span className="font-semibold text-zinc-800 dark:text-zinc-200">{dog.name}</span>.
+                    Preencha o formulário abaixo para apoiar o/a <span className="font-semibold text-zinc-800 dark:text-zinc-200">{dog.name}</span>.
                   </p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-5">
                   <div>
                     <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-2">
-                      Sponsor Name
+                      Nome Completo
                     </label>
                     <input 
                       type="text"
                       required
-                      placeholder="e.g. John Doe"
+                      placeholder="Ex: João Silva"
                       value={sponsorName}
                       onChange={(e) => setSponsorName(e.target.value)}
                       className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 dark:bg-zinc-950 dark:border-zinc-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-colors"
@@ -158,12 +159,12 @@ export const DogDetailModal: React.FC<DogDetailModalProps> = ({
 
                   <div>
                     <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-2">
-                      Email Address
+                      Endereço de E-mail
                     </label>
                     <input 
                       type="email"
                       required
-                      placeholder="e.g. john@example.com"
+                      placeholder="Ex: joao@exemplo.com"
                       value={sponsorEmail}
                       onChange={(e) => setSponsorEmail(e.target.value)}
                       className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 dark:bg-zinc-950 dark:border-zinc-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-colors"
@@ -172,7 +173,7 @@ export const DogDetailModal: React.FC<DogDetailModalProps> = ({
 
                   <div>
                     <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-3">
-                      Monthly Contribution
+                      Contribuição Mensal
                     </label>
                     <div className="grid grid-cols-3 gap-2.5">
                       {[10, 20, 0].map((val) => (
@@ -186,7 +187,7 @@ export const DogDetailModal: React.FC<DogDetailModalProps> = ({
                               : 'bg-zinc-50 border-zinc-200 hover:bg-zinc-100 text-zinc-700 dark:bg-zinc-950 dark:border-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-800'
                           }`}
                         >
-                          {val === 0 ? 'Custom' : `€${val}/mo`}
+                          {val === 0 ? 'Outro' : `€${val}/mês`}
                         </button>
                       ))}
                     </div>
@@ -198,12 +199,12 @@ export const DogDetailModal: React.FC<DogDetailModalProps> = ({
                           type="number"
                           min="1"
                           required
-                          placeholder="Other amount"
+                          placeholder="Outro valor"
                           value={customAmount}
                           onChange={(e) => setCustomAmount(e.target.value)}
                           className="w-full px-2 py-3 bg-transparent text-sm focus:outline-none"
                         />
-                        <span className="pr-4 text-zinc-400 text-xs font-semibold">/month</span>
+                        <span className="pr-4 text-zinc-400 text-xs font-semibold">/mês</span>
                       </div>
                     )}
                   </div>
@@ -213,7 +214,7 @@ export const DogDetailModal: React.FC<DogDetailModalProps> = ({
                       type="submit"
                       className="w-full flex items-center justify-center gap-1 px-6 py-3 bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold rounded-xl shadow-lg shadow-amber-500/20 transition-colors cursor-pointer"
                     >
-                      Continue to Payment Setup
+                      Continuar para Pagamento
                       <ArrowRight className="h-4 w-4" />
                     </button>
                     <button
@@ -221,7 +222,7 @@ export const DogDetailModal: React.FC<DogDetailModalProps> = ({
                       onClick={() => setShowForm(false)}
                       className="w-full text-center text-xs font-semibold text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 mt-3 block"
                     >
-                      Back to details
+                      Voltar aos detalhes
                     </button>
                   </div>
                 </form>
@@ -233,31 +234,31 @@ export const DogDetailModal: React.FC<DogDetailModalProps> = ({
                   <div className="inline-flex items-center justify-center p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-full text-emerald-500 mb-2">
                     <CheckCircle className="h-10 w-10" />
                   </div>
-                  <h3 className="text-2xl font-black text-zinc-900 dark:text-white">Almost there!</h3>
+                  <h3 className="text-2xl font-black text-zinc-900 dark:text-white">Quase concluído!</h3>
                   <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
-                    Your sponsorship request for <span className="font-bold text-amber-500">{dog.name}</span> has been registered as pending.
+                    O seu pedido de apadrinhamento para o/a <span className="font-bold text-amber-500">{dog.name}</span> foi registado como pendente.
                   </p>
                 </div>
 
                 <div className="bg-zinc-50 dark:bg-zinc-950 p-5 rounded-2xl border border-zinc-200/50 dark:border-zinc-800/50 space-y-4">
                   <p className="text-xs font-bold text-zinc-700 dark:text-zinc-300 uppercase tracking-wide">
-                    To activate your monthly sponsorship:
+                    Para ativar o seu apadrinhamento mensal:
                   </p>
                   
                   {/* Payment Details */}
                   <div className="space-y-3.5">
                     {/* Method 1: MBWay */}
                     <div className="flex justify-between items-center text-sm border-b border-zinc-200/60 dark:border-zinc-800/80 pb-2">
-                      <div className="font-bold text-zinc-800 dark:text-zinc-200">MBWay Transfer</div>
+                      <div className="font-bold text-zinc-800 dark:text-zinc-200">Transferência MBWay</div>
                       <div className="text-right">
                         <div className="font-bold text-amber-500">+351 912 345 678</div>
-                        <div className="text-[10px] text-zinc-400">Phone number</div>
+                        <div className="text-[10px] text-zinc-400">Telemóvel da Associação</div>
                       </div>
                     </div>
 
                     {/* Method 2: IBAN */}
                     <div className="flex flex-col gap-1 text-sm border-b border-zinc-200/60 dark:border-zinc-800/80 pb-2.5">
-                      <div className="font-bold text-zinc-800 dark:text-zinc-200">Bank Transfer (IBAN)</div>
+                      <div className="font-bold text-zinc-800 dark:text-zinc-200">Transferência Bancária (IBAN)</div>
                       <div className="font-mono text-xs font-extrabold text-zinc-900 dark:text-zinc-100 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-2 rounded-lg text-center mt-1">
                         PT50 0007 0000 1234 5678 9012 3
                       </div>
@@ -265,14 +266,14 @@ export const DogDetailModal: React.FC<DogDetailModalProps> = ({
 
                     {/* Amount */}
                     <div className="flex justify-between items-center text-sm">
-                      <div className="font-bold text-zinc-800 dark:text-zinc-200">Monthly Contribution</div>
-                      <div className="font-black text-emerald-600">€{activeAmount}/month</div>
+                      <div className="font-bold text-zinc-800 dark:text-zinc-200">Valor Mensal Escolhido</div>
+                      <div className="font-black text-emerald-600">€{activeAmount}/mês</div>
                     </div>
                   </div>
 
                   <div className="p-3 bg-amber-500/5 border border-amber-500/10 rounded-xl">
                     <p className="text-[11px] text-amber-700 dark:text-amber-400 font-medium leading-relaxed">
-                      ⚠️ <strong>Important:</strong> Include <strong>"Sponsor {dog.name}"</strong> in your transfer/MBWay description so we can match and activate your subscription!
+                      ⚠️ <strong>Importante:</strong> Inclua a descrição <strong>"Padrinho {dog.name}"</strong> na transferência/MBWay para que possamos identificar e ativar a sua subscrição!
                     </p>
                   </div>
                 </div>
@@ -281,7 +282,7 @@ export const DogDetailModal: React.FC<DogDetailModalProps> = ({
                   onClick={onClose}
                   className="w-full py-3 bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-100 dark:hover:bg-white dark:text-zinc-950 text-white font-bold rounded-xl transition-colors cursor-pointer text-sm"
                 >
-                  Done, I've sent the transfer
+                  Concluí a transferência
                 </button>
               </div>
             )}
@@ -291,16 +292,16 @@ export const DogDetailModal: React.FC<DogDetailModalProps> = ({
           <div className="w-full md:w-1/2 overflow-y-auto p-6 md:p-8 bg-zinc-50 dark:bg-zinc-900/40">
             <div className="flex items-center gap-2 mb-6">
               <MessageCircle className="h-5 w-5 text-amber-500" />
-              <h3 className="text-xl font-bold text-zinc-900 dark:text-white">Sponsor updates</h3>
+              <h3 className="text-xl font-bold text-zinc-900 dark:text-white">Diário do Cão</h3>
             </div>
 
             {updates.length === 0 ? (
               // Empty State
               <div className="h-[200px] flex flex-col items-center justify-center text-center p-4">
                 <Sparkles className="h-8 w-8 text-zinc-300 dark:text-zinc-600 mb-2" />
-                <h4 className="text-sm font-bold text-zinc-700 dark:text-zinc-300">No updates yet</h4>
+                <h4 className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Sem diário ainda</h4>
                 <p className="text-xs text-zinc-400 max-w-[240px] mt-1 leading-normal">
-                  Sponsors will receive medical updates and milestones for {dog.name} here once they are posted.
+                  As atualizações de saúde, progresso e bem-estar de {dog.name} serão publicadas aqui para os padrinhos.
                 </p>
               </div>
             ) : (
@@ -314,7 +315,7 @@ export const DogDetailModal: React.FC<DogDetailModalProps> = ({
                     {/* Date */}
                     <div className="flex items-center gap-1 text-[11px] font-bold text-amber-600 tracking-wider uppercase mb-1">
                       <Calendar className="h-3 w-3" />
-                      {new Date(update.createdAt).toLocaleDateString(undefined, {
+                      {new Date(update.createdAt).toLocaleDateString('pt-PT', {
                         month: 'short',
                         day: 'numeric',
                         year: 'numeric',

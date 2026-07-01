@@ -197,9 +197,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           <div className="inline-flex items-center justify-center p-3 bg-amber-500/10 border border-amber-500/20 rounded-2xl text-amber-500 mb-2">
             <Lock className="h-6 w-6" />
           </div>
-          <h2 className="text-2xl font-black text-zinc-900 dark:text-white">Admin Access</h2>
+          <h2 className="text-2xl font-black text-zinc-900 dark:text-white">Acesso Restrito</h2>
           <p className="text-xs text-zinc-500 dark:text-zinc-400">
-            Please enter your administrator passcode.
+            Introduza o código de administração para desbloquear o painel.
           </p>
         </div>
 
@@ -215,7 +215,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             />
             {passcodeError && (
               <p className="text-[11px] font-bold text-red-500 text-center mt-2">
-                Incorrect passcode. Try again!
+                Código incorreto. Tente novamente!
               </p>
             )}
           </div>
@@ -225,7 +225,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             disabled={isLoadingAuth}
             className="w-full py-3 bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold rounded-xl transition-all shadow-md shadow-amber-500/15 cursor-pointer disabled:opacity-75 disabled:cursor-not-allowed"
           >
-            {isLoadingAuth ? 'Unlocking...' : 'Unlock Dashboard'}
+            {isLoadingAuth ? 'A verificar...' : 'Desbloquear Painel'}
           </button>
         </form>
       </div>
@@ -237,9 +237,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       {/* Title Header */}
       <div className="flex justify-between items-center pb-4 border-b border-zinc-200/60 dark:border-zinc-800/80">
         <div>
-          <h2 className="text-3xl font-black text-zinc-900 dark:text-white">Admin Dashboard</h2>
+          <h2 className="text-3xl font-black text-zinc-900 dark:text-white">Painel de Gestão - OBEA</h2>
           <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
-            Manage dogs, approve godfather requests, and post status updates.
+            Faça a gestão dos cães acolhidos, aprove apoios mensais e publique atualizações no diário.
           </p>
         </div>
         <button
@@ -254,27 +254,31 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors cursor-pointer"
         >
           <ArrowLeft className="h-4 w-4" />
-          Lock Dashboard
+          Bloquear Painel
         </button>
       </div>
 
       {/* Tabs */}
       <div className="flex border-b border-zinc-200 dark:border-zinc-800">
-        {(['dogs', 'sponsorships', 'updates'] as Tab[]).map((tab) => (
+        {[
+          { key: 'dogs', label: 'Cães Acolhidos' },
+          { key: 'sponsorships', label: 'Padrinhos & Madrinhas' },
+          { key: 'updates', label: 'Diário de Bordo' }
+        ].map((tab) => (
           <button
-            key={tab}
+            key={tab.key}
             onClick={() => {
-              setActiveTab(tab);
+              setActiveTab(tab.key as Tab);
               setIsAddingDog(false);
               setIsAddingUpdate(false);
             }}
-            className={`py-3 px-6 text-sm font-bold border-b-2 capitalize transition-all cursor-pointer ${
-              activeTab === tab
+            className={`py-3 px-6 text-sm font-bold border-b-2 transition-all cursor-pointer ${
+              activeTab === tab.key
                 ? 'border-amber-500 text-amber-500'
                 : 'border-transparent text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200'
             }`}
           >
-            {tab}
+            {tab.label}
           </button>
         ))}
       </div>
@@ -285,13 +289,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           {!isAddingDog ? (
             <>
               <div className="flex justify-between items-center">
-                <h3 className="text-lg font-bold text-zinc-800 dark:text-zinc-200">Registered Dogs</h3>
+                <h3 className="text-lg font-bold text-zinc-800 dark:text-zinc-200">Cães Registados</h3>
                 <button
                   onClick={() => setIsAddingDog(true)}
                   className="flex items-center gap-1.5 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold rounded-lg shadow-md shadow-amber-500/10 transition-colors cursor-pointer"
                 >
                   <PlusCircle className="h-4 w-4" />
-                  Add a Dog
+                  Adicionar Cão
                 </button>
               </div>
 
@@ -299,7 +303,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 <div className="text-center p-12 bg-white dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/80 rounded-2xl flex flex-col items-center justify-center gap-4">
                   <div>
                     <Heart className="h-8 w-8 text-zinc-300 mx-auto mb-2" />
-                    <p className="text-sm font-semibold text-zinc-500">No dogs registered yet.</p>
+                    <p className="text-sm font-semibold text-zinc-500">Nenhum cão registado ainda.</p>
                   </div>
                   {onSeedDatabase && (
                     <button
@@ -317,7 +321,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       }}
                       className="px-4 py-2 border border-zinc-200 hover:bg-zinc-50 dark:border-zinc-850 dark:hover:bg-zinc-800 text-xs font-bold text-zinc-700 dark:text-zinc-300 rounded-lg cursor-pointer transition-all disabled:opacity-50"
                     >
-                      {isSeeding ? 'Seeding...' : 'Seed Database with Demo Dogs'}
+                      {isSeeding ? 'A semear...' : 'Semear Base de Dados com Cães Demo'}
                     </button>
                   )}
                 </div>
@@ -336,8 +340,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         />
                         <div>
                           <h4 className="font-bold text-zinc-900 dark:text-white">{dog.name}</h4>
-                          <p className="text-xs text-zinc-400 capitalize">
-                            {dog.gender} • {dog.age}
+                          <p className="text-xs text-zinc-400">
+                            {dog.gender === 'male' ? 'Macho' : 'Fêmea'} • {dog.age}
                           </p>
                         </div>
                       </div>
@@ -345,14 +349,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         <button
                           onClick={() => handleEditClick(dog)}
                           className="p-2 text-zinc-400 hover:text-amber-500 hover:bg-amber-500/5 rounded-lg transition-colors cursor-pointer"
-                          title="Edit"
+                          title="Editar"
                         >
                           <Edit3 className="h-4.5 w-4.5" />
                         </button>
                         <button
                           onClick={() => onDeleteDog(dog.id)}
                           className="p-2 text-zinc-400 hover:text-red-500 hover:bg-red-500/5 rounded-lg transition-colors cursor-pointer"
-                          title="Delete"
+                          title="Eliminar"
                         >
                           <Trash2 className="h-4.5 w-4.5" />
                         </button>
@@ -366,12 +370,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             // Add/Edit Dog Form
             <form onSubmit={handleAddDogSubmit} className="max-w-xl bg-white dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/80 p-6 rounded-2xl shadow-md space-y-5">
               <h3 className="text-lg font-bold text-zinc-800 dark:text-zinc-200">
-                {editingDogId ? 'Edit Dog Profile' : 'Register New Dog'}
+                {editingDogId ? 'Editar Perfil do Cão' : 'Registar Novo Cão'}
               </h3>
               
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2">Name</label>
+                  <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2">Nome</label>
                   <input
                     type="text"
                     required
@@ -381,7 +385,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2">Breed</label>
+                  <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2">Raça</label>
                   <input
                     type="text"
                     required
@@ -394,29 +398,29 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
               <div className="grid grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2">Age</label>
+                  <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2">Idade</label>
                   <input
                     type="text"
                     required
-                    placeholder="e.g. 2 years"
+                    placeholder="Ex: 2 anos"
                     value={dogAge}
                     onChange={(e) => setDogAge(e.target.value)}
                     className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 dark:bg-zinc-950 dark:border-zinc-800 rounded-lg text-sm focus:outline-none focus:border-amber-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2">Gender</label>
+                  <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2">Sexo</label>
                   <select
                     value={dogGender}
                     onChange={(e) => setDogGender(e.target.value as 'male' | 'female')}
                     className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 dark:bg-zinc-950 dark:border-zinc-800 rounded-lg text-sm focus:outline-none focus:border-amber-500"
                   >
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
+                    <option value="male">Macho</option>
+                    <option value="female">Fêmea</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2">Goal (€/mo)</label>
+                  <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2">Meta (€/mês)</label>
                   <input
                     type="number"
                     required
@@ -429,7 +433,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2">Description / Story</label>
+                <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2">História / Perfil</label>
                 <textarea
                   required
                   rows={4}
@@ -440,10 +444,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2">Medical Needs (Optional)</label>
+                <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2">Cuidados Médicos Especiais (Opcional)</label>
                 <input
                   type="text"
-                  placeholder="e.g. Daily eye drops (€15/mo)"
+                  placeholder="Ex: Medicação diária (€15/mês)"
                   value={dogMedical}
                   onChange={(e) => setDogMedical(e.target.value)}
                   className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 dark:bg-zinc-950 dark:border-zinc-800 rounded-lg text-sm focus:outline-none focus:border-amber-500"
@@ -451,7 +455,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2">Image URL</label>
+                <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2">URL da Fotografia</label>
                 <input
                   type="url"
                   required
@@ -467,7 +471,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   type="submit"
                   className="flex-1 py-2.5 bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold rounded-xl shadow-md cursor-pointer"
                 >
-                  Save Profile
+                  Gravar Perfil
                 </button>
                 <button
                   type="button"
@@ -477,7 +481,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   }}
                   className="flex-1 py-2.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 dark:bg-zinc-850 dark:hover:bg-zinc-800 dark:text-zinc-300 text-sm font-bold rounded-xl cursor-pointer"
                 >
-                  Cancel
+                  Cancelar
                 </button>
               </div>
             </form>
@@ -488,12 +492,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       {/* Tab 2: Manage Sponsorships */}
       {activeTab === 'sponsorships' && (
         <div className="space-y-6">
-          <h3 className="text-lg font-bold text-zinc-800 dark:text-zinc-200">Godfather Sponsorships</h3>
+          <h3 className="text-lg font-bold text-zinc-800 dark:text-zinc-200 font-bold">Apadrinhamentos Registados</h3>
 
           {sponsorships.length === 0 ? (
             <div className="text-center p-12 bg-white dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/80 rounded-2xl">
               <FileText className="h-8 w-8 text-zinc-300 mx-auto mb-2" />
-              <p className="text-sm font-semibold text-zinc-500">No sponsorships registered yet.</p>
+              <p className="text-sm font-semibold text-zinc-500">Nenhum apadrinhamento registado ainda.</p>
             </div>
           ) : (
             <div className="bg-white dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/80 rounded-2xl overflow-hidden shadow-sm">
@@ -501,11 +505,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 <table className="w-full text-left border-collapse text-sm">
                   <thead>
                     <tr className="bg-zinc-50 dark:bg-zinc-950 text-zinc-500 dark:text-zinc-400 font-bold border-b border-zinc-200 dark:border-zinc-800">
-                      <th className="p-4">Dog</th>
-                      <th className="p-4">Sponsor</th>
-                      <th className="p-4">Contribution</th>
-                      <th className="p-4">Status</th>
-                      <th className="p-4 text-right">Actions</th>
+                      <th className="p-4">Cão</th>
+                      <th className="p-4">Padrinho / Madrinha</th>
+                      <th className="p-4">Contribuição</th>
+                      <th className="p-4">Estado</th>
+                      <th className="p-4 text-right">Ações</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
@@ -514,7 +518,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       return (
                         <tr key={spons.id} className="hover:bg-zinc-50/50 dark:hover:bg-zinc-800/30">
                           <td className="p-4 font-bold text-zinc-900 dark:text-white">
-                            {dog ? dog.name : 'Unknown Dog'}
+                            {dog ? dog.name : 'Cão Desconhecido'}
                           </td>
                           <td className="p-4">
                             <div className="font-semibold text-zinc-700 dark:text-zinc-300">
@@ -523,11 +527,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                             <div className="text-xs text-zinc-400">{spons.sponsorEmail}</div>
                           </td>
                           <td className="p-4 font-black text-emerald-600">
-                            €{spons.monthlyAmount}/mo
+                            €{spons.monthlyAmount}/mês
                           </td>
                           <td className="p-4">
                             <span
-                              className={`inline-flex px-2 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider ${
+                              className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider ${
                                 spons.status === 'active'
                                   ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-400'
                                   : spons.status === 'pending'
@@ -535,7 +539,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                                   : 'bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400'
                               }`}
                             >
-                              {spons.status}
+                              {spons.status === 'active' ? 'Ativo' : spons.status === 'pending' ? 'Pendente' : 'Cancelado'}
                             </span>
                           </td>
                           <td className="p-4 text-right">
@@ -544,20 +548,20 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                                 <button
                                   onClick={() => onApproveSponsorship(spons.id)}
                                   className="flex items-center gap-1 px-3 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold rounded-lg shadow-sm transition-colors cursor-pointer"
-                                  title="Approve payment and activate"
+                                  title="Aprovar pagamento e ativar"
                                 >
                                   <CheckCircle className="h-3.5 w-3.5" />
-                                  Approve
+                                  Aprovar
                                 </button>
                               )}
                               {spons.status !== 'cancelled' && (
                                 <button
                                   onClick={() => onCancelSponsorship(spons.id)}
                                   className="flex items-center gap-1 px-3 py-1.5 border border-zinc-200 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-800 text-zinc-600 dark:text-zinc-400 text-xs font-bold rounded-lg transition-colors cursor-pointer"
-                                  title="Cancel subscription"
+                                  title="Cancelar apadrinhamento"
                                 >
                                   <XCircle className="h-3.5 w-3.5" />
-                                  Cancel
+                                  Cancelar
                                 </button>
                               )}
                             </div>
@@ -579,20 +583,20 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           {!isAddingUpdate ? (
             <>
               <div className="flex justify-between items-center">
-                <h3 className="text-lg font-bold text-zinc-800 dark:text-zinc-200 font-bold">Dog Updates Log</h3>
+                <h3 className="text-lg font-bold text-zinc-800 dark:text-zinc-200 font-bold">Histórico do Diário</h3>
                 <button
                   onClick={() => setIsAddingUpdate(true)}
                   className="flex items-center gap-1.5 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold rounded-lg shadow-md shadow-amber-500/10 transition-colors cursor-pointer"
                 >
                   <PlusCircle className="h-4 w-4" />
-                  Post Update
+                  Nova Atualização
                 </button>
               </div>
 
               <div className="text-center p-12 bg-white dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/80 rounded-2xl">
                 <FileText className="h-8 w-8 text-zinc-300 mx-auto mb-2" />
                 <p className="text-sm font-semibold text-zinc-500">
-                  Select "Post Update" to write a medical update or status milestones.
+                  Selecione "Nova Atualização" para escrever notícias sobre saúde, exames ou o dia a dia de um cão.
                 </p>
               </div>
             </>
@@ -600,18 +604,18 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             // Add Update Form
             <form onSubmit={handleAddUpdateSubmit} className="max-w-xl bg-white dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/80 p-6 rounded-2xl shadow-md space-y-5">
               <h3 className="text-lg font-bold text-zinc-800 dark:text-zinc-200">
-                Post New Update
+                Publicar Atualização no Diário
               </h3>
 
               <div>
-                <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2">Select Dog</label>
+                <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2">Selecionar Cão</label>
                 <select
                   required
                   value={updateDogId}
                   onChange={(e) => setUpdateDogId(e.target.value)}
                   className="w-full px-3 py-2.5 bg-zinc-50 border border-zinc-200 dark:bg-zinc-950 dark:border-zinc-800 rounded-lg text-sm focus:outline-none focus:border-amber-500"
                 >
-                  <option value="">-- Choose a dog --</option>
+                  <option value="">-- Escolher cão --</option>
                   {dogs.map((dog) => (
                     <option key={dog.id} value={dog.id}>
                       {dog.name}
@@ -621,11 +625,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2">Update Title</label>
+                <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2">Título da Notícia</label>
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Max went to the vet today"
+                  placeholder="Ex: Rocky fez o seu primeiro dia de fisioterapia!"
                   value={updateTitle}
                   onChange={(e) => setUpdateTitle(e.target.value)}
                   className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 dark:bg-zinc-950 dark:border-zinc-800 rounded-lg text-sm focus:outline-none focus:border-amber-500"
@@ -633,11 +637,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2">Content</label>
+                <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2">Mensagem</label>
                 <textarea
                   required
                   rows={5}
-                  placeholder="Tell the godparents how the dog is doing..."
+                  placeholder="Escreva a mensagem para os padrinhos..."
                   value={updateContent}
                   onChange={(e) => setUpdateContent(e.target.value)}
                   className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 dark:bg-zinc-950 dark:border-zinc-800 rounded-lg text-sm focus:outline-none focus:border-amber-500 resize-none font-medium leading-relaxed text-zinc-600 dark:text-zinc-300"
@@ -645,7 +649,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2">Update Photo URL (Optional)</label>
+                <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2">URL de Foto (Opcional)</label>
                 <input
                   type="url"
                   placeholder="https://images.unsplash.com/..."
@@ -660,14 +664,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   type="submit"
                   className="flex-1 py-2.5 bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold rounded-xl shadow-md cursor-pointer"
                 >
-                  Publish Update
+                  Publicar Atualização
                 </button>
                 <button
                   type="button"
                   onClick={() => setIsAddingUpdate(false)}
                   className="flex-1 py-2.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 dark:bg-zinc-850 dark:hover:bg-zinc-800 dark:text-zinc-300 text-sm font-bold rounded-xl cursor-pointer"
                 >
-                  Cancel
+                  Cancelar
                 </button>
               </div>
             </form>

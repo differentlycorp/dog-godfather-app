@@ -528,26 +528,26 @@ function App() {
               <div className="max-w-4xl mx-auto text-center space-y-6 relative z-10">
                 <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-400 border border-amber-500/10">
                   <Sparkles className="h-3.5 w-3.5" />
-                  Become a Dog Godfather Today
+                  Apadrinhamento de Cães - OBEA
                 </div>
-                <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-zinc-900 dark:text-white leading-[1.1] max-w-2xl mx-auto">
-                  Help a Special Dog Find <span className="text-amber-500">Care & Love</span>
+                <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-zinc-900 dark:text-white leading-[1.1] max-w-3xl mx-auto">
+                  Pelo conhecimento. Pela consciência. <span className="text-amber-500">Pela responsabilidade.</span>
                 </h1>
-                <p className="text-base sm:text-lg text-zinc-500 dark:text-zinc-400 max-w-xl mx-auto leading-relaxed">
-                  My father cares for 30 dogs with special medical needs, injuries, or old age that make adoption difficult. With just €10 a month, you can sponsor a dog, fund their medical treatments, and follow their recovery.
+                <p className="text-base sm:text-lg text-zinc-500 dark:text-zinc-400 max-w-2xl mx-auto leading-relaxed">
+                  Não há ética humana possível que ignore o sofrimento animal. No Observatório do Bem-Estar Animal (OBEA), acolhemos e protegemos cães com necessidades médicas especiais ou idades avançadas que dificultam a sua adoção. Ao apadrinhar com €10/mês, ajuda a garantir os seus tratamentos e qualidade de vida.
                 </p>
                 <div className="flex justify-center gap-3 pt-4">
                   <a
                     href="#dogs-list"
                     className="px-6 py-3 bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold rounded-xl shadow-lg shadow-amber-500/25 transition-all transform hover:-translate-y-0.5"
                   >
-                    Sponsor a Dog
+                    Apadrinhar um Cão
                   </a>
                   <a
                     href="#how-it-works"
                     className="px-6 py-3 bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800 text-sm font-bold rounded-xl transition-all"
                   >
-                    Learn How it Works
+                    Como Funciona
                   </a>
                 </div>
               </div>
@@ -565,7 +565,7 @@ function App() {
                     {totalDogsCount}
                   </div>
                   <div className="text-[10px] sm:text-xs font-bold text-zinc-400 uppercase tracking-wider">
-                    Dogs Assisted
+                    Cães Protegidos
                   </div>
                 </div>
                 <div className="space-y-1.5 border-r border-zinc-200/60 dark:border-zinc-800/60">
@@ -573,7 +573,7 @@ function App() {
                     {activeSponsorsCount}
                   </div>
                   <div className="text-[10px] sm:text-xs font-bold text-zinc-400 uppercase tracking-wider">
-                    Active Sponsors
+                    Padrinhos Ativos
                   </div>
                 </div>
                 <div className="space-y-1.5">
@@ -581,7 +581,7 @@ function App() {
                     €{totalMonthlyFunding}
                   </div>
                   <div className="text-[10px] sm:text-xs font-bold text-zinc-400 uppercase tracking-wider">
-                    Monthly Support
+                    Apoio Mensal
                   </div>
                 </div>
               </div>
@@ -590,8 +590,8 @@ function App() {
             {/* How It Works Section */}
             <section id="how-it-works" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
               <div className="text-center space-y-2 mb-12">
-                <h2 className="text-3xl font-black text-zinc-900 dark:text-white">How Sponsorship Works</h2>
-                <p className="text-xs text-zinc-400 font-bold uppercase tracking-wider">Three simple steps to make a difference</p>
+                <h2 className="text-3xl font-black text-zinc-900 dark:text-white">Como Funciona o Apadrinhamento</h2>
+                <p className="text-xs text-zinc-400 font-bold uppercase tracking-wider">Três passos simples para fazer a diferença</p>
               </div>
 
               <div className="grid gap-8 md:grid-cols-3">
@@ -600,9 +600,9 @@ function App() {
                   <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-500/10 text-amber-500 font-black text-lg">
                     1
                   </div>
-                  <h3 className="text-lg font-bold text-zinc-800 dark:text-zinc-200">Choose a Dog</h3>
+                  <h3 className="text-lg font-bold text-zinc-800 dark:text-zinc-200">Escolha o Cão</h3>
                   <p className="text-xs text-zinc-400 leading-relaxed">
-                    Browse our gallery of special-needs dogs below. Read their stories and check their medical cards to find a dog that connects with you.
+                    Explore a nossa galeria abaixo e conheça os cães do OBEA. Leia as suas histórias e consulte as suas necessidades médicas especiais para escolher o seu afilhado.
                   </p>
                 </div>
                 {/* Step 2 */}
@@ -610,9 +610,9 @@ function App() {
                   <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-500/10 text-amber-500 font-black text-lg">
                     2
                   </div>
-                  <h3 className="text-lg font-bold text-zinc-800 dark:text-zinc-200">Set Up Sponsorship</h3>
+                  <h3 className="text-lg font-bold text-zinc-800 dark:text-zinc-200">Registe o Apoio</h3>
                   <p className="text-xs text-zinc-400 leading-relaxed">
-                    Click "Become a Godfather" on the dog's page. Fill out your details and complete the bank transfer or MBWay setup to sponsor €10/month (or custom amount).
+                    Clique em "Apadrinhar". Introduza os seus dados e configure uma transferência bancária periódica ou por MBWay no valor de €10/mês (ou o valor que desejar).
                   </p>
                 </div>
                 {/* Step 3 */}
@@ -620,9 +620,9 @@ function App() {
                   <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-500/10 text-amber-500 font-black text-lg">
                     3
                   </div>
-                  <h3 className="text-lg font-bold text-zinc-800 dark:text-zinc-200">Receive Updates</h3>
+                  <h3 className="text-lg font-bold text-zinc-800 dark:text-zinc-200">Acompanhe a Evolução</h3>
                   <p className="text-xs text-zinc-400 leading-relaxed">
-                    Once your sponsorship is confirmed by my father, you will receive regular updates, vet notes, and recovery milestones directly on their profile and via email!
+                    Assim que confirmarmos o seu primeiro apoio, o seu apadrinhamento fica ativo. Receberá relatórios de saúde, exames e o diário de bordo do cão diretamente no site!
                   </p>
                 </div>
               </div>
@@ -639,7 +639,7 @@ function App() {
                   <Search className="absolute left-3.5 h-4.5 w-4.5 text-zinc-400" />
                   <input
                     type="text"
-                    placeholder="Search by name or breed..."
+                    placeholder="Pesquisar por nome ou raça..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="w-full pl-10 pr-4 py-2.5 bg-transparent text-sm focus:outline-none text-zinc-800 dark:text-zinc-200 font-medium"
@@ -649,10 +649,10 @@ function App() {
                 {/* Filter buttons */}
                 <div className="flex flex-wrap gap-1.5 w-full sm:w-auto">
                   {[
-                    { key: 'all', label: 'All Dogs' },
-                    { key: 'needs_sponsor', label: 'Needs Godfather' },
-                    { key: 'partially_sponsored', label: 'Partially' },
-                    { key: 'fully_sponsored', label: 'Fully Sponsored' },
+                    { key: 'all', label: 'Todos os Cães' },
+                    { key: 'needs_sponsor', label: 'Sem Padrinho' },
+                    { key: 'partially_sponsored', label: 'Parcial' },
+                    { key: 'fully_sponsored', label: 'Apadrinhados' },
                   ].map((filter) => (
                     <button
                       key={filter.key}
@@ -673,9 +673,9 @@ function App() {
               {filteredDogs.length === 0 ? (
                 <div className="text-center py-20 bg-white dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/80 rounded-3xl">
                   <Users className="h-10 w-10 text-zinc-300 mx-auto mb-2" />
-                  <h4 className="text-base font-bold text-zinc-800 dark:text-zinc-200">No dogs found</h4>
+                  <h4 className="text-base font-bold text-zinc-800 dark:text-zinc-200">Nenhum cão encontrado</h4>
                   <p className="text-xs text-zinc-400 mt-1 max-w-xs mx-auto">
-                    Try adjusting your filters or search query to find your dog godfather match.
+                    Tente ajustar os seus filtros ou o termo de pesquisa para encontrar um cão afilhado.
                   </p>
                 </div>
               ) : (
@@ -723,12 +723,12 @@ function App() {
               <Heart className="h-4.5 w-4.5 fill-current" />
             </div>
             <span className="text-base font-black tracking-tight text-zinc-900 dark:text-white">
-              Paws & <span className="text-amber-500">Godparents</span>
+              Padrinhos <span className="text-amber-500">OBEA</span>
             </span>
           </div>
 
           <p className="text-xs text-zinc-400 dark:text-zinc-500 text-center font-medium leading-relaxed md:max-w-md">
-            Helping special dogs get the medical care they need. Created for animal lovers and local dog shelters.
+            Garantir a proteção e qualidade de vida de cães com necessidades especiais. Criado em colaboração com o Observatório do Bem-Estar Animal.
           </p>
 
           <div className="flex gap-4 text-xs font-semibold text-zinc-400 dark:text-zinc-500">
@@ -736,14 +736,14 @@ function App() {
               onClick={() => setCurrentView('gallery')}
               className="hover:text-zinc-600 dark:hover:text-zinc-300 cursor-pointer"
             >
-              Meet the Dogs
+              Conhecer os Cães
             </button>
             <span>•</span>
             <button 
               onClick={() => setCurrentView('admin')}
               className="hover:text-zinc-600 dark:hover:text-zinc-300 cursor-pointer"
             >
-              Admin Access
+              Acesso Restrito
             </button>
           </div>
         </div>

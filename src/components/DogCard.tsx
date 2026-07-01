@@ -18,24 +18,26 @@ export const DogCard: React.FC<DogCardProps> = ({ dog, onSelect }) => {
       case 'fully_sponsored':
         return (
           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-300">
-            Fully Sponsored
+            Apadrinhado
           </span>
         );
       case 'partially_sponsored':
         return (
           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 dark:bg-amber-950/50 dark:text-amber-300">
-            {percentSponsored}% Sponsored
+            {percentSponsored}% Coberto
           </span>
         );
       case 'needs_sponsor':
       default:
         return (
           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800 dark:bg-red-950/50 dark:text-red-300">
-            Needs a Godfather
+            Sem Padrinho
           </span>
         );
     }
   };
+
+  const translatedGender = dog.gender === 'male' ? 'Macho' : 'Fêmea';
 
   return (
     <div 
@@ -53,7 +55,7 @@ export const DogCard: React.FC<DogCardProps> = ({ dog, onSelect }) => {
         {/* Gender Indicator overlay */}
         <div className="absolute top-3 right-3 flex items-center justify-center h-8 px-2.5 bg-black/60 backdrop-blur-md rounded-full text-white text-xs font-semibold gap-1">
           <span>{dog.gender === 'male' ? '♂' : '♀'}</span>
-          <span className="capitalize">{dog.gender}</span>
+          <span>{translatedGender}</span>
         </div>
       </div>
 
@@ -91,8 +93,8 @@ export const DogCard: React.FC<DogCardProps> = ({ dog, onSelect }) => {
           {/* Sponsorship Progress */}
           <div className="mb-4">
             <div className="flex justify-between text-xs font-semibold mb-1 text-zinc-600 dark:text-zinc-400">
-              <span>Goal: €{dog.targetMonthlySponsorship}/mo</span>
-              <span className="text-amber-500">€{dog.currentMonthlySponsorship} raised</span>
+              <span>Objetivo: €{dog.targetMonthlySponsorship}/mês</span>
+              <span className="text-amber-500">€{dog.currentMonthlySponsorship} angariados</span>
             </div>
             <div className="w-full h-2 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
               <div 
@@ -107,7 +109,7 @@ export const DogCard: React.FC<DogCardProps> = ({ dog, onSelect }) => {
             className="w-full flex items-center justify-center gap-1.5 px-4 py-2.5 bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-100 dark:hover:bg-white dark:text-zinc-950 text-white rounded-xl text-sm font-semibold transition-colors cursor-pointer group-hover:bg-amber-500 group-hover:text-white"
           >
             <Heart className="h-4 w-4 fill-current group-hover:animate-pulse" />
-            Meet {dog.name}
+            Conhecer {dog.name}
           </button>
         </div>
       </div>
