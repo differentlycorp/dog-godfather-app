@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { Dog, DogUpdate, Sponsorship } from '../types';
 import { PlusCircle, FileText, CheckCircle, XCircle, Trash2, Edit3, Lock, ArrowLeft, Heart } from 'lucide-react';
 import { supabase } from '../services/supabaseClient';
@@ -35,6 +35,30 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [isSeeding, setIsSeeding] = useState(false);
   
   const [activeTab, setActiveTab] = useState<Tab>('dogs');
+
+  // Check active session or local auth timestamp on mount
+  useEffect(() => {
+    const checkSession = async () => {
+      if (supabase) {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+          setIsAuthenticated(true);
+        }
+      } else {
+        const savedAuth = localStorage.getItem('paws_admin_auth_timestamp');
+        if (savedAuth) {
+          const timestamp = parseInt(savedAuth);
+          const ONE_HOUR = 60 * 60 * 1000;
+          if (Date.now() - timestamp < ONE_HOUR) {
+            setIsAuthenticated(true);
+          } else {
+            localStorage.removeItem('paws_admin_auth_timestamp');
+          }
+        }
+      }
+    };
+    checkSession();
+  }, []);
 
   // Dog Form State
   const [isAddingDog, setIsAddingDog] = useState(false);
@@ -76,6 +100,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       } else {
         // Local prototype fallback: Check passcode locally if environment variables aren't set
         if (passcode === '757784') {
+          localStorage.setItem('paws_admin_auth_timestamp', Date.now().toString());
           setIsAuthenticated(true);
         } else {
           setPasscodeError(true);
@@ -218,7 +243,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           </p>
         </div>
         <button
-          onClick={() => setIsAuthenticated(false)}
+          onClick={async () => {
+            if (supabase) {
+              await supabase.auth.signOut();
+            } else {
+              localStorage.removeItem('paws_admin_auth_timestamp');
+            }
+            setIsAuthenticated(false);
+          }}
           className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors cursor-pointer"
         >
           <ArrowLeft className="h-4 w-4" />
