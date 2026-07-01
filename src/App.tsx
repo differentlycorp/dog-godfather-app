@@ -12,6 +12,7 @@ function App() {
   const [dogs, setDogs] = useState<Dog[]>(supabase ? [] : mockDogs);
   const [sponsorships, setSponsorships] = useState<Sponsorship[]>(supabase ? [] : mockSponsorships);
   const [updates, setUpdates] = useState<DogUpdate[]>(supabase ? [] : mockUpdates);
+  const [publicSponsors, setPublicSponsors] = useState<{ dogId: string; sponsorName: string }[]>([]);
   
   const [selectedDog, setSelectedDog] = useState<Dog | null>(null);
   const [currentView, setCurrentView] = useState<'gallery' | 'admin'>('gallery');
@@ -19,6 +20,32 @@ function App() {
   // Filters State
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'needs_sponsor' | 'partially_sponsored' | 'fully_sponsored'>('all');
+
+  // Fetch Public Sponsor Names
+  useEffect(() => {
+    const fetchPublicSponsors = async () => {
+      if (!supabase) {
+        const active = mockSponsorships
+          .filter(s => s.status === 'active')
+          .map(s => ({ dogId: s.dogId, sponsorName: s.sponsorName }));
+        setPublicSponsors(active);
+        return;
+      }
+
+      try {
+        const { data, error } = await supabase
+          .from('public_sponsors')
+          .select('*');
+        if (!error && data) {
+          setPublicSponsors(data.map(d => ({ dogId: d.dog_id, sponsorName: d.sponsor_name })));
+        }
+      } catch (err) {
+        console.error('Error fetching public sponsors:', err);
+      }
+    };
+
+    fetchPublicSponsors();
+  }, [sponsorships]);
 
   // Fetch Dogs and Updates on Mount
   useEffect(() => {
@@ -681,7 +708,12 @@ function App() {
               ) : (
                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                   {filteredDogs.map((dog) => (
-                    <DogCard key={dog.id} dog={dog} onSelect={setSelectedDog} />
+                    <DogCard 
+                      key={dog.id} 
+                      dog={dog} 
+                      sponsors={publicSponsors.filter(s => s.dogId === dog.id).map(s => s.sponsorName)}
+                      onSelect={setSelectedDog} 
+                    />
                   ))}
                 </div>
               )}
@@ -692,6 +724,7 @@ function App() {
               <DogDetailModal
                 dog={selectedDog}
                 updates={updates.filter((u) => u.dogId === selectedDog.id)}
+                sponsors={publicSponsors.filter(s => s.dogId === selectedDog.id).map(s => s.sponsorName)}
                 onClose={() => setSelectedDog(null)}
                 onAddSponsorship={handleAddSponsorship}
               />

@@ -5,6 +5,7 @@ import { X, Calendar, Heart, ShieldAlert, CheckCircle, ArrowRight, Sparkles, Mes
 interface DogDetailModalProps {
   dog: Dog;
   updates: DogUpdate[];
+  sponsors: string[];
   onClose: () => void;
   onAddSponsorship: (sponsorship: Omit<Sponsorship, 'id' | 'createdAt' | 'status' | 'startDate'>) => void;
 }
@@ -12,6 +13,7 @@ interface DogDetailModalProps {
 export const DogDetailModal: React.FC<DogDetailModalProps> = ({
   dog,
   updates,
+  sponsors,
   onClose,
   onAddSponsorship,
 }) => {
@@ -97,6 +99,21 @@ export const DogDetailModal: React.FC<DogDetailModalProps> = ({
                     {dog.description}
                   </p>
                 </div>
+
+                {/* Sponsors display */}
+                {sponsors.length > 0 && (
+                  <div className="space-y-2">
+                    <h4 className="text-sm font-bold text-zinc-900 dark:text-white uppercase tracking-wider">Padrinhos e Madrinhas</h4>
+                    <div className="flex flex-wrap gap-1.5">
+                      {sponsors.map((name, idx) => (
+                        <span key={idx} className="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-amber-500/5 dark:bg-amber-950/20 border border-amber-500/10 rounded-xl text-xs font-bold text-amber-600 dark:text-amber-400">
+                          <Sparkles className="h-3 w-3" />
+                          {name}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* Special/Medical Needs */}
                 {dog.medicalNeeds && (

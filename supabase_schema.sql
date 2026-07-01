@@ -92,3 +92,16 @@ CREATE POLICY "Authenticated Delete for Dog Photos"
 ON storage.objects FOR DELETE
 TO authenticated
 USING ( bucket_id = 'dog-photos' );
+
+-- =========================================================================
+-- SECURE PUBLIC SPONSORS VIEW
+-- =========================================================================
+
+-- Create a secure view to expose only active sponsor names and their associated dog IDs
+CREATE VIEW public_sponsors AS
+SELECT dog_id, sponsor_name
+FROM sponsorships
+WHERE status = 'active';
+
+-- Grant select permission to both public (anon) and authenticated users
+GRANT SELECT ON public_sponsors TO anon, authenticated;

@@ -4,10 +4,11 @@ import { Heart, Activity, Calendar } from 'lucide-react';
 
 interface DogCardProps {
   dog: Dog;
+  sponsors: string[];
   onSelect: (dog: Dog) => void;
 }
 
-export const DogCard: React.FC<DogCardProps> = ({ dog, onSelect }) => {
+export const DogCard: React.FC<DogCardProps> = ({ dog, sponsors, onSelect }) => {
   const percentSponsored = Math.min(
     Math.round((dog.currentMonthlySponsorship / dog.targetMonthlySponsorship) * 100),
     100
@@ -83,9 +84,17 @@ export const DogCard: React.FC<DogCardProps> = ({ dog, onSelect }) => {
           </div>
 
           {/* Description Excerpt */}
-          <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-4 line-clamp-2 leading-relaxed">
+          <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-3 line-clamp-2 leading-relaxed">
             {dog.description}
           </p>
+
+          {/* Sponsors display */}
+          {sponsors.length > 0 && (
+            <div className="mb-4 text-xs font-semibold text-zinc-500 dark:text-zinc-400">
+              <span className="text-amber-500">Padrinhos: </span>
+              {sponsors.join(', ')}
+            </div>
+          )}
         </div>
 
         {/* Progress & Actions Section */}
