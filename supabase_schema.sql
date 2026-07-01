@@ -66,3 +66,29 @@ CREATE POLICY "Allow public read access to updates" ON updates
 
 CREATE POLICY "Allow admin write access to updates" ON updates 
     FOR ALL TO authenticated USING (true) WITH CHECK (true);
+
+-- =========================================================================
+-- STORAGE BUCKETS SETUP
+-- =========================================================================
+
+-- Create a storage bucket for dog photos
+INSERT INTO storage.buckets (id, name, public) 
+VALUES ('dog-photos', 'dog-photos', true)
+ON CONFLICT (id) DO NOTHING;
+
+-- Policy for public read access to dog-photos objects
+CREATE POLICY "Public Read Access for Dog Photos"
+ON storage.objects FOR SELECT
+USING ( bucket_id = 'dog-photos' );
+
+-- Policy to allow authenticated uploads to dog-photos objects
+CREATE POLICY "Authenticated Insert for Dog Photos"
+ON storage.objects FOR INSERT
+TO authenticated
+WITH CHECK ( bucket_id = 'dog-photos' );
+
+-- Policy to allow authenticated deletes from dog-photos objects
+CREATE POLICY "Authenticated Delete for Dog Photos"
+ON storage.objects FOR DELETE
+TO authenticated
+USING ( bucket_id = 'dog-photos' );

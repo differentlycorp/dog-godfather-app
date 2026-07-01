@@ -79,6 +79,82 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [updateContent, setUpdateContent] = useState('');
   const [updateImage, setUpdateImage] = useState('');
 
+  const [isUploadingDogImage, setIsUploadingDogImage] = useState(false);
+  const [isUploadingUpdateImage, setIsUploadingUpdateImage] = useState(false);
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      setIsUploadingDogImage(true);
+      if (!e.target.files || e.target.files.length === 0) {
+        throw new Error('Deve selecionar uma imagem para carregar.');
+      }
+      const file = e.target.files[0];
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
+      const filePath = `${fileName}`;
+
+      if (supabase) {
+        const { error: uploadError } = await supabase.storage
+          .from('dog-photos')
+          .upload(filePath, file);
+
+        if (uploadError) {
+          throw uploadError;
+        }
+
+        const { data } = supabase.storage
+          .from('dog-photos')
+          .getPublicUrl(filePath);
+
+        setDogImage(data.publicUrl);
+      } else {
+        // Fallback for local preview
+        const localUrl = URL.createObjectURL(file);
+        setDogImage(localUrl);
+      }
+    } catch (error: any) {
+      alert(`Erro no upload: ${error.message || error}`);
+    } finally {
+      setIsUploadingDogImage(false);
+    }
+  };
+
+  const handleUpdateImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      setIsUploadingUpdateImage(true);
+      if (!e.target.files || e.target.files.length === 0) {
+        throw new Error('Deve selecionar uma imagem para carregar.');
+      }
+      const file = e.target.files[0];
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
+      const filePath = `${fileName}`;
+
+      if (supabase) {
+        const { error: uploadError } = await supabase.storage
+          .from('dog-photos')
+          .upload(filePath, file);
+
+        if (uploadError) {
+          throw uploadError;
+        }
+
+        const { data } = supabase.storage
+          .from('dog-photos')
+          .getPublicUrl(filePath);
+
+        setUpdateImage(data.publicUrl);
+      } else {
+        const localUrl = URL.createObjectURL(file);
+        setUpdateImage(localUrl);
+      }
+    } catch (error: any) {
+      alert(`Erro no upload: ${error.message || error}`);
+    } finally {
+      setIsUploadingUpdateImage(false);
+    }
+  };
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoadingAuth(true);
@@ -455,15 +531,34 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2">URL da Fotografia</label>
-                <input
-                  type="url"
-                  required
-                  placeholder="https://images.unsplash.com/..."
-                  value={dogImage}
-                  onChange={(e) => setDogImage(e.target.value)}
-                  className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 dark:bg-zinc-950 dark:border-zinc-800 rounded-lg text-sm focus:outline-none focus:border-amber-500"
-                />
+                <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2">Fotografia do Cão</label>
+                <div className="flex items-center gap-4">
+                  {dogImage && (
+                    <img 
+                      src={dogImage} 
+                      alt="Miniatura" 
+                      className="w-16 h-16 rounded-xl object-cover border border-zinc-200 dark:border-zinc-800"
+                    />
+                  )}
+                  <div className="flex-1">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      disabled={isUploadingDogImage}
+                      onChange={handleImageUpload}
+                      className="hidden"
+                      id="dog-image-file"
+                    />
+                    <label
+                      htmlFor="dog-image-file"
+                      className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800 text-xs font-bold text-zinc-700 dark:text-zinc-300 rounded-lg cursor-pointer transition-colors"
+                    >
+                      {isUploadingDogImage ? 'A carregar...' : dogImage ? 'Alterar Imagem' : 'Escolher Ficheiro'}
+                    </label>
+                    <span className="text-[10px] text-zinc-400 block mt-1">Formatos suportados: JPG, PNG, WEBP. Tamanho máximo recomendado: 5MB.</span>
+                  </div>
+                </div>
+                <input type="hidden" value={dogImage} required />
               </div>
 
               <div className="flex gap-3 pt-2">
@@ -649,14 +744,34 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2">URL de Foto (Opcional)</label>
-                <input
-                  type="url"
-                  placeholder="https://images.unsplash.com/..."
-                  value={updateImage}
-                  onChange={(e) => setUpdateImage(e.target.value)}
-                  className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 dark:bg-zinc-950 dark:border-zinc-800 rounded-lg text-sm focus:outline-none focus:border-amber-500"
-                />
+                <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2">Fotografia da Atualização (Opcional)</label>
+                <div className="flex items-center gap-4">
+                  {updateImage && (
+                    <img 
+                      src={updateImage} 
+                      alt="Miniatura" 
+                      className="w-16 h-16 rounded-xl object-cover border border-zinc-200 dark:border-zinc-800"
+                    />
+                  )}
+                  <div className="flex-1">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      disabled={isUploadingUpdateImage}
+                      onChange={handleUpdateImageUpload}
+                      className="hidden"
+                      id="update-image-file"
+                    />
+                    <label
+                      htmlFor="update-image-file"
+                      className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800 text-xs font-bold text-zinc-700 dark:text-zinc-300 rounded-lg cursor-pointer transition-colors"
+                    >
+                      {isUploadingUpdateImage ? 'A carregar...' : updateImage ? 'Alterar Imagem' : 'Escolher Ficheiro'}
+                    </label>
+                    <span className="text-[10px] text-zinc-400 block mt-1">Formatos suportados: JPG, PNG, WEBP. Tamanho máximo recomendado: 5MB.</span>
+                  </div>
+                </div>
+                <input type="hidden" value={updateImage} />
               </div>
 
               <div className="flex gap-3 pt-2">
