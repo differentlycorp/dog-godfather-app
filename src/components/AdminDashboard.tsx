@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import type { Dog, DogUpdate, Sponsorship } from '../types';
 import { PlusCircle, FileText, CheckCircle, XCircle, Trash2, Edit3, Lock, ArrowLeft, Heart } from 'lucide-react';
+import { supabase } from '../services/supabaseClient';
 
 interface AdminDashboardProps {
   dogs: Dog[];
@@ -28,6 +29,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [passcode, setPasscode] = useState('');
   const [passcodeError, setPasscodeError] = useState(false);
+  const [isLoadingAuth, setIsLoadingAuth] = useState(false);
   
   const [activeTab, setActiveTab] = useState<Tab>('dogs');
 
@@ -50,13 +52,37 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [updateContent, setUpdateContent] = useState('');
   const [updateImage, setUpdateImage] = useState('');
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (passcode === '757784') {
-      setIsAuthenticated(true);
-      setPasscodeError(false);
-    } else {
+    setIsLoadingAuth(true);
+    setPasscodeError(false);
+
+    try {
+      if (supabase) {
+        // Secure production mode: Authenticate against Supabase with secret email and entered passcode
+        const { error } = await supabase.auth.signInWithPassword({
+          email: 'admin@paws-godparents.com',
+          password: passcode,
+        });
+
+        if (error) {
+          setPasscodeError(true);
+        } else {
+          setIsAuthenticated(true);
+        }
+      } else {
+        // Local prototype fallback: Check passcode locally if environment variables aren't set
+        if (passcode === '757784') {
+          setIsAuthenticated(true);
+        } else {
+          setPasscodeError(true);
+        }
+      }
+    } catch (err) {
+      console.error('Auth error:', err);
       setPasscodeError(true);
+    } finally {
+      setIsLoadingAuth(false);
     }
   };
 
@@ -154,9 +180,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             <input
               type="password"
               placeholder="••••"
+              disabled={isLoadingAuth}
               value={passcode}
               onChange={(e) => setPasscode(e.target.value)}
-              className="w-full text-center tracking-widest px-4 py-3 bg-zinc-50 border border-zinc-200 dark:bg-zinc-950 dark:border-zinc-800 rounded-xl text-lg font-bold focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-colors"
+              className="w-full text-center tracking-widest px-4 py-3 bg-zinc-50 border border-zinc-200 dark:bg-zinc-950 dark:border-zinc-800 rounded-xl text-lg font-bold focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-colors disabled:opacity-50"
             />
             {passcodeError && (
               <p className="text-[11px] font-bold text-red-500 text-center mt-2">
@@ -167,9 +194,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
           <button
             type="submit"
-            className="w-full py-3 bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold rounded-xl transition-all shadow-md shadow-amber-500/15 cursor-pointer"
+            disabled={isLoadingAuth}
+            className="w-full py-3 bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold rounded-xl transition-all shadow-md shadow-amber-500/15 cursor-pointer disabled:opacity-75 disabled:cursor-not-allowed"
           >
-            Unlock Dashboard
+            {isLoadingAuth ? 'Unlocking...' : 'Unlock Dashboard'}
           </button>
         </form>
       </div>
