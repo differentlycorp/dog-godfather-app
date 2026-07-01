@@ -52,7 +52,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (passcode === '1234' || passcode.toLowerCase() === 'admin') {
+    if (passcode === '757784') {
       setIsAuthenticated(true);
       setPasscodeError(false);
     } else {
@@ -145,8 +145,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           </div>
           <h2 className="text-2xl font-black text-zinc-900 dark:text-white">Admin Access</h2>
           <p className="text-xs text-zinc-500 dark:text-zinc-400">
-            Please enter your administrator passcode. <br />
-            <span className="text-[10px] font-semibold text-amber-500">(Hint: Use "1234")</span>
+            Please enter your administrator passcode.
           </p>
         </div>
 
