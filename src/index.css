@@ -1,5 +1,26 @@
 @import "tailwindcss";
 
+@theme {
+  /* Override default Tailwind color scale to instantly implement the OBEA brand visual identity */
+  --color-amber-50: #F3FAF0;
+  --color-amber-100: #E6F4D3;
+  --color-amber-200: #C2E68F;
+  --color-amber-400: #8CC63F;
+  --color-amber-500: #0E3B2E;
+  --color-amber-600: #08241C;
+  --color-amber-700: #08241C;
+  --color-amber-800: #0E3B2E;
+  --color-amber-900: #071F18;
+  --color-amber-950: #04100C;
+
+  /* Accent gradient mapping */
+  --color-orange-500: #8CC63F;
+
+  /* Custom custom tokens */
+  --color-obea-dark: #0E3B2E;
+  --color-obea-light: #8CC63F;
+}
+
 @layer base {
   body {
     @apply bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50 antialiased;

@@ -5,6 +5,7 @@ import { Header } from './components/Header';
 import { DogCard } from './components/DogCard';
 import { DogDetailModal } from './components/DogDetailModal';
 import { AdminDashboard } from './components/AdminDashboard';
+import { OBEALanding } from './components/OBEALanding';
 import { Heart, Search, Users, Sparkles } from 'lucide-react';
 import { supabase } from './services/supabaseClient';
 
@@ -15,7 +16,7 @@ function App() {
   const [publicSponsors, setPublicSponsors] = useState<{ dogId: string; sponsorName: string }[]>([]);
   
   const [selectedDog, setSelectedDog] = useState<Dog | null>(null);
-  const [currentView, setCurrentView] = useState<'gallery' | 'admin'>('gallery');
+  const [currentView, setCurrentView] = useState<'home' | 'gallery' | 'admin'>('home');
 
   // Filters State
   const [searchQuery, setSearchQuery] = useState('');
@@ -542,23 +543,25 @@ function App() {
   const totalMonthlyFunding = dogs.reduce((sum, d) => sum + d.currentMonthlySponsorship, 0);
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 flex flex-col justify-between selection:bg-amber-500/20">
+    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 flex flex-col justify-between selection:bg-obea-dark/20">
       
       <div>
         <Header currentView={currentView} setCurrentView={setCurrentView} />
 
-        {currentView === 'gallery' ? (
+        {currentView === 'home' ? (
+          <OBEALanding onHelpClick={() => setCurrentView('gallery')} />
+        ) : currentView === 'gallery' ? (
           // Visitor Gallery View
           <main className="space-y-16 pb-20">
             {/* Hero Section */}
-            <section className="relative overflow-hidden py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-amber-50/50 to-transparent dark:from-zinc-900/30">
+            <section className="relative overflow-hidden py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-obea-light/10 to-transparent dark:from-zinc-900/30">
               <div className="max-w-4xl mx-auto text-center space-y-6 relative z-10">
-                <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-400 border border-amber-500/10">
+                <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold bg-obea-light/20 text-obea-dark dark:bg-emerald-950/40 dark:text-emerald-400 border border-obea-light/10">
                   <Sparkles className="h-3.5 w-3.5" />
                   Apadrinhamento de Cães - OBEA
                 </div>
                 <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-zinc-900 dark:text-white leading-[1.1] max-w-3xl mx-auto">
-                  Pelo conhecimento. Pela consciência. <span className="text-amber-500">Pela responsabilidade.</span>
+                  Pelo conhecimento. Pela consciência. <span style={{ color: '#0E3B2E' }} className="dark:text-emerald-400">Pela responsabilidade.</span>
                 </h1>
                 <p className="text-base sm:text-lg text-zinc-500 dark:text-zinc-400 max-w-2xl mx-auto leading-relaxed">
                   Não há ética humana possível que ignore o sofrimento animal. No Observatório do Bem-Estar Animal (OBEA), acolhemos e protegemos cães com necessidades médicas especiais ou idades avançadas que dificultam a sua adoção. Ao apadrinhar com €10/mês, ajuda a garantir os seus tratamentos e qualidade de vida.
@@ -566,7 +569,8 @@ function App() {
                 <div className="flex justify-center gap-3 pt-4">
                   <a
                     href="#dogs-list"
-                    className="px-6 py-3 bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold rounded-xl shadow-lg shadow-amber-500/25 transition-all transform hover:-translate-y-0.5"
+                    style={{ backgroundColor: '#0E3B2E' }}
+                    className="px-6 py-3 hover:bg-emerald-900 text-white text-sm font-bold rounded-xl shadow-lg shadow-emerald-900/10 transition-all transform hover:-translate-y-0.5"
                   >
                     Apadrinhar um Cão
                   </a>
@@ -580,8 +584,8 @@ function App() {
               </div>
 
               {/* Decorative shapes */}
-              <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-64 h-64 bg-amber-500/5 rounded-full blur-3xl" />
-              <div className="absolute top-1/3 right-1/4 -translate-y-1/2 w-72 h-72 bg-orange-500/5 rounded-full blur-3xl" />
+              <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-64 h-64 bg-obea-light/5 rounded-full blur-3xl" />
+              <div className="absolute top-1/3 right-1/4 -translate-y-1/2 w-72 h-72 bg-emerald-500/5 rounded-full blur-3xl" />
             </section>
 
             {/* Impact Stats */}
@@ -596,7 +600,7 @@ function App() {
                   </div>
                 </div>
                 <div className="space-y-1.5 border-r border-zinc-200/60 dark:border-zinc-800/60">
-                  <div className="text-2xl sm:text-3xl font-black text-amber-500">
+                  <div className="text-2xl sm:text-3xl font-black text-obea-light">
                     {activeSponsorsCount}
                   </div>
                   <div className="text-[10px] sm:text-xs font-bold text-zinc-400 uppercase tracking-wider">
@@ -624,7 +628,7 @@ function App() {
               <div className="grid gap-8 md:grid-cols-3">
                 {/* Step 1 */}
                 <div className="bg-white dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/80 p-6 rounded-3xl space-y-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-500/10 text-amber-500 font-black text-lg">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-obea-light/15 text-obea-dark font-black text-lg">
                     1
                   </div>
                   <h3 className="text-lg font-bold text-zinc-800 dark:text-zinc-200">Escolha o Cão</h3>
@@ -634,7 +638,7 @@ function App() {
                 </div>
                 {/* Step 2 */}
                 <div className="bg-white dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/80 p-6 rounded-3xl space-y-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-500/10 text-amber-500 font-black text-lg">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-obea-light/15 text-obea-dark font-black text-lg">
                     2
                   </div>
                   <h3 className="text-lg font-bold text-zinc-800 dark:text-zinc-200">Registe o Apoio</h3>
@@ -644,7 +648,7 @@ function App() {
                 </div>
                 {/* Step 3 */}
                 <div className="bg-white dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/80 p-6 rounded-3xl space-y-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-500/10 text-amber-500 font-black text-lg">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-obea-light/15 text-obea-dark font-black text-lg">
                     3
                   </div>
                   <h3 className="text-lg font-bold text-zinc-800 dark:text-zinc-200">Acompanhe a Evolução</h3>
@@ -686,7 +690,7 @@ function App() {
                       onClick={() => setStatusFilter(filter.key as any)}
                       className={`flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
                         statusFilter === filter.key
-                          ? 'bg-amber-500 border-amber-500 text-white shadow-sm'
+                          ? 'bg-obea-dark border-obea-dark text-white shadow-sm'
                           : 'bg-transparent border-zinc-200 hover:bg-zinc-50 text-zinc-600 dark:border-zinc-850 dark:hover:bg-zinc-800 dark:text-zinc-300'
                       }`}
                     >
@@ -756,7 +760,7 @@ function App() {
               <Heart className="h-4.5 w-4.5 fill-current" />
             </div>
             <span className="text-base font-black tracking-tight text-zinc-900 dark:text-white">
-              Padrinhos <span className="text-amber-500">OBEA</span>
+              Padrinhos <span style={{ color: '#0E3B2E' }} className="dark:text-emerald-400">OBEA</span>
             </span>
           </div>
 
@@ -765,6 +769,13 @@ function App() {
           </p>
 
           <div className="flex gap-4 text-xs font-semibold text-zinc-400 dark:text-zinc-500">
+            <button 
+              onClick={() => setCurrentView('home')}
+              className="hover:text-zinc-600 dark:hover:text-zinc-300 cursor-pointer"
+            >
+              Início
+            </button>
+            <span>•</span>
             <button 
               onClick={() => setCurrentView('gallery')}
               className="hover:text-zinc-600 dark:hover:text-zinc-300 cursor-pointer"

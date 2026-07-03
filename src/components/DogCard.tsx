@@ -24,7 +24,7 @@ export const DogCard: React.FC<DogCardProps> = ({ dog, sponsors, onSelect }) => 
         );
       case 'partially_sponsored':
         return (
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 dark:bg-amber-950/50 dark:text-amber-300">
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-obea-light/20 text-obea-dark dark:bg-emerald-950/40 dark:text-emerald-400">
             {percentSponsored}% Coberto
           </span>
         );
@@ -65,7 +65,7 @@ export const DogCard: React.FC<DogCardProps> = ({ dog, sponsors, onSelect }) => 
         <div>
           {/* Header row */}
           <div className="flex justify-between items-start mb-2">
-            <h3 className="text-xl font-bold text-zinc-900 dark:text-white group-hover:text-amber-500 transition-colors">
+            <h3 className="text-xl font-bold text-zinc-900 dark:text-white group-hover:text-obea-dark transition-colors">
               {dog.name}
             </h3>
             {getStatusBadge()}
@@ -91,7 +91,7 @@ export const DogCard: React.FC<DogCardProps> = ({ dog, sponsors, onSelect }) => 
           {/* Sponsors display */}
           {sponsors.length > 0 && (
             <div className="mb-4 text-xs font-semibold text-zinc-500 dark:text-zinc-400">
-              <span className="text-amber-500">Padrinhos: </span>
+              <span className="text-obea-dark">Padrinhos: </span>
               {sponsors.join(', ')}
             </div>
           )}
@@ -103,11 +103,11 @@ export const DogCard: React.FC<DogCardProps> = ({ dog, sponsors, onSelect }) => 
           <div className="mb-4">
             <div className="flex justify-between text-xs font-semibold mb-1 text-zinc-600 dark:text-zinc-400">
               <span>Objetivo: €{dog.targetMonthlySponsorship}/mês</span>
-              <span className="text-amber-500">€{dog.currentMonthlySponsorship} angariados</span>
+              <span className="text-obea-dark">€{dog.currentMonthlySponsorship} angariados</span>
             </div>
             <div className="w-full h-2 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
               <div 
-                className="h-full bg-gradient-to-r from-amber-500 to-orange-500 rounded-full transition-all duration-500" 
+                className="h-full bg-gradient-to-r from-obea-dark to-obea-light rounded-full transition-all duration-500" 
                 style={{ width: `${percentSponsored}%` }}
               />
             </div>
@@ -115,7 +115,7 @@ export const DogCard: React.FC<DogCardProps> = ({ dog, sponsors, onSelect }) => 
 
           {/* Action Button */}
           <button 
-            className="w-full flex items-center justify-center gap-1.5 px-4 py-2.5 bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-100 dark:hover:bg-white dark:text-zinc-950 text-white rounded-xl text-sm font-semibold transition-colors cursor-pointer group-hover:bg-amber-500 group-hover:text-white"
+            className="w-full flex items-center justify-center gap-1.5 px-4 py-2.5 bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-100 dark:hover:bg-white dark:text-zinc-950 text-white rounded-xl text-sm font-semibold transition-colors cursor-pointer group-hover:bg-obea-dark group-hover:text-white"
           >
             <Heart className="h-4 w-4 fill-current group-hover:animate-pulse" />
             Conhecer {dog.name}
