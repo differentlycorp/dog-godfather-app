@@ -27,12 +27,14 @@ export const OBEALanding: React.FC<OBEALandingProps> = ({ onHelpClick }) => {
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleContactSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !email || !message) return;
 
     setIsSubmitting(true);
+    setErrorMessage('');
     setTimeout(() => {
       setIsSubmitting(false);
       setShowSuccess(true);
@@ -274,6 +276,11 @@ export const OBEALanding: React.FC<OBEALandingProps> = ({ onHelpClick }) => {
           </div>
         ) : (
           <form onSubmit={handleContactSubmit} className="bg-white dark:bg-zinc-900 border border-zinc-200/60 dark:border-zinc-800/80 p-8 rounded-[2.5rem] shadow-sm space-y-5">
+            {errorMessage && (
+              <div className="p-4 bg-red-500/10 border border-red-500/20 text-red-700 dark:text-red-400 text-xs font-semibold rounded-xl">
+                ⚠️ {errorMessage}
+              </div>
+            )}
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
                 <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2">Nome</label>

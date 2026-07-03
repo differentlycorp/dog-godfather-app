@@ -15,7 +15,7 @@ export const OBEALogo: React.FC<OBEALogoProps> = ({
   const lightGreen = lightMode ? '#ffffff' : '#8CC63F';
   const subtextColor = lightMode ? '#e4e4e7' : '#27272a';
 
-  // Customized organic heart representing the union of animals
+  // Vector heart symbol representing the union of animals
   const renderSymbol = (sizeClass: string) => (
     <svg 
       className={`${sizeClass} shrink-0`} 
@@ -39,7 +39,7 @@ export const OBEALogo: React.FC<OBEALogoProps> = ({
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      {/* Small inner curves representing the rabbit/bird inside the heart */}
+      {/* Inner curves representing rabbit/bird */}
       <path 
         d="M30 42C33 39 37 39 40 42" 
         stroke={darkGreen} 
@@ -52,7 +52,7 @@ export const OBEALogo: React.FC<OBEALogoProps> = ({
         strokeWidth="4" 
         strokeLinecap="round"
       />
-      {/* Central core bond dot */}
+      {/* Central core dot */}
       <circle cx="50" cy="38" r="4.5" fill={lightGreen} />
     </svg>
   );
@@ -73,10 +73,10 @@ export const OBEALogo: React.FC<OBEALogoProps> = ({
             OBEA
           </span>
           <span 
-            className="text-[9px] font-bold mt-1 tracking-wider uppercase"
+            className="text-[8px] font-bold mt-1 tracking-wider uppercase"
             style={{ color: subtextColor }}
           >
-            Bem-Estar Animal
+            Observatório do Bem-Estar Animal
           </span>
         </div>
       </div>
@@ -84,31 +84,14 @@ export const OBEALogo: React.FC<OBEALogoProps> = ({
   }
 
   // Default: Vertical (Principal version)
+  // We use the exact official logo image uploaded by the user
   return (
-    <div className={`flex flex-col items-center text-center space-y-4 ${className}`}>
-      {renderSymbol('h-24 w-24 hover:scale-105 transition-transform duration-300')}
-      <div className="space-y-1.5">
-        <h1 
-          className="text-3xl sm:text-4xl font-black tracking-[0.3em] leading-none translate-x-[0.15em]"
-          style={{ color: darkGreen }}
-        >
-          OBEA
-        </h1>
-        
-        {/* Horizontal line with dot in center */}
-        <div className="flex items-center justify-center gap-2 py-0.5">
-          <div className="h-[1.5px] w-12 rounded-full" style={{ backgroundColor: lightGreen }} />
-          <div className="h-2 w-2 rounded-full" style={{ backgroundColor: lightGreen }} />
-          <div className="h-[1.5px] w-12 rounded-full" style={{ backgroundColor: lightGreen }} />
-        </div>
-
-        <p 
-          className="text-xs sm:text-sm font-semibold tracking-widest uppercase"
-          style={{ color: subtextColor }}
-        >
-          Observatório do Bem-Estar Animal
-        </p>
-      </div>
+    <div className={`flex flex-col items-center justify-center ${className}`}>
+      <img 
+        src="/obea-logo.png" 
+        alt="OBEA - Observatório do Bem-Estar Animal" 
+        className="max-h-56 sm:max-h-64 w-auto object-contain hover:scale-102 transition-transform duration-300 dark:invert-0" 
+      />
     </div>
   );
 };
