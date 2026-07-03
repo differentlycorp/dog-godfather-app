@@ -237,7 +237,7 @@ export const OBEALanding: React.FC<OBEALandingProps> = ({ onHelpClick }) => {
               </div>
               <div className="flex items-center gap-2">
                 <div className="h-2 w-2 rounded-full" style={{ backgroundColor: '#8CC63F' }} />
-                <span>Preenchimento de Ficha com hábitos, saúde e alimentação do cão</span>
+                <span>Preenchimento de Ficha com hábitos, saúde e alimentação do animal</span>
               </div>
             </div>
           </div>
@@ -258,11 +258,11 @@ export const OBEALanding: React.FC<OBEALandingProps> = ({ onHelpClick }) => {
             </p>
 
             <button
-              onClick={onHelpClick}
+              onClick={() => document.getElementById('contactos')?.scrollIntoView({ behavior: 'smooth' })}
               style={{ color: '#0E3B2E', borderColor: '#0E3B2E' }}
               className="w-full py-3 border border-current text-xs font-bold rounded-xl hover:bg-emerald-500/5 cursor-pointer transition-colors flex items-center justify-center gap-1.5"
             >
-              Apadrinhar cães no programa
+              Pedir informações / Aderir ao programa
               <ArrowRight className="h-3.5 w-3.5" />
             </button>
           </div>
