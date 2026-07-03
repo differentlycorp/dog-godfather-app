@@ -61,6 +61,12 @@ export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView }) =
                 Programa Guardião
               </button>
               <button 
+                onClick={() => handleScroll('cao-na-escola')} 
+                className="hover:text-zinc-900 dark:hover:text-white transition-colors cursor-pointer"
+              >
+                Cão na Escola
+              </button>
+              <button 
                 onClick={() => handleScroll('contactos')} 
                 className="hover:text-zinc-900 dark:hover:text-white transition-colors cursor-pointer"
               >

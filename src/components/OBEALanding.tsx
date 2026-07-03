@@ -30,6 +30,7 @@ export const OBEALanding: React.FC<OBEALandingProps> = ({ onHelpClick }) => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [showFullManifesto, setShowFullManifesto] = useState(false);
+  const [showCaoNaEscolaModal, setShowCaoNaEscolaModal] = useState(false);
 
   const handleContactSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -269,6 +270,65 @@ export const OBEALanding: React.FC<OBEALandingProps> = ({ onHelpClick }) => {
         </div>
       </section>
 
+      {/* 4b. Cão na Escola Section */}
+      <section id="cao-na-escola" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-20">
+        <div className="bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-200/50 dark:border-zinc-800/50 p-8 sm:p-12 rounded-[2.5rem] flex flex-col lg:flex-row-reverse gap-10 items-center">
+          <div className="w-full lg:w-1/2 space-y-6">
+            <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[10px] font-extrabold uppercase tracking-widest bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/10">
+              <FileText className="h-3.5 w-3.5" />
+              Pedagogia do Vivo
+            </div>
+            <h2 className="text-3xl font-black text-zinc-900 dark:text-white leading-tight">
+              Projeto Cão na Escola
+            </h2>
+            <p className="text-sm leading-relaxed text-zinc-500 dark:text-zinc-400 font-medium">
+              Introduzir na escola um elemento vivo que não ensina por palavras, mas por presença, relação e cuidado. Num tempo de crescente virtualização, o contacto com um animal é uma das formas mais simples e eficazes de reconectar os alunos com a realidade, a empatia e a responsabilidade social.
+            </p>
+            
+            {/* Value list */}
+            <div className="grid gap-3 text-xs font-semibold text-zinc-600 dark:text-zinc-300">
+              <div className="flex items-center gap-2">
+                <div className="h-2 w-2 rounded-full" style={{ backgroundColor: '#8CC63F' }} />
+                <span>Educação e cidadania através do desenvolvimento de empatia</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="h-2 w-2 rounded-full" style={{ backgroundColor: '#8CC63F' }} />
+                <span>Promoção de bem-estar mental e redução de ansiedade escolar</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="h-2 w-2 rounded-full" style={{ backgroundColor: '#8CC63F' }} />
+                <span>Integração responsável e sensibilização contra o abandono</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="w-full lg:w-1/2 bg-white dark:bg-zinc-950 p-6 sm:p-8 rounded-3xl border border-zinc-200/60 dark:border-zinc-800/80 shadow-sm space-y-5">
+            <div className="flex gap-3">
+              <div className="h-10 w-10 bg-emerald-500/10 text-emerald-600 rounded-xl flex items-center justify-center shrink-0">
+                <Trees className="h-5 w-5" />
+              </div>
+              <div>
+                <h4 className="text-sm font-bold text-zinc-900 dark:text-white">Proposta para Autarquias</h4>
+                <p className="text-xs text-zinc-400 mt-0.5">Parceria para um projeto-piloto de referência</p>
+              </div>
+            </div>
+            
+            <p className="text-xs leading-relaxed text-zinc-500 dark:text-zinc-400 font-medium">
+              O projeto assenta em garantias comportamentais e veterinárias rigorosas. O animal é selecionado por técnicos e o seu bem-estar é a condição fundamental de todo o processo pedagógico.
+            </p>
+
+            <button
+              onClick={() => setShowCaoNaEscolaModal(true)}
+              style={{ backgroundColor: '#0E3B2E' }}
+              className="w-full py-3 hover:bg-emerald-900 text-white text-xs font-bold rounded-xl cursor-pointer transition-colors flex items-center justify-center gap-1.5 shadow-md shadow-emerald-900/10"
+            >
+              Conhecer o Projeto na Íntegra
+              <ArrowRight className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        </div>
+      </section>
+
       {/* 5. Contact Section */}
       <section id="contactos" className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-20 space-y-10">
         <div className="text-center space-y-2">
@@ -460,6 +520,116 @@ export const OBEALanding: React.FC<OBEALandingProps> = ({ onHelpClick }) => {
                   </p>
                   <p className="text-center font-bold text-zinc-950 dark:text-white pt-2">
                     Porque, no fundo, a questão não é apenas o que fazemos aos animais. É o que nos tornamos ao fazê-lo.
+                  </p>
+                </div>
+
+                <div className="flex justify-end pt-4 border-t border-zinc-200/60 dark:border-zinc-800/60 text-xs font-bold text-zinc-400">
+                  <span>Luís Matos Vicente • Observatório do Bem-Estar Animal</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Cão na Escola Modal */}
+      {showCaoNaEscolaModal && (
+        <div className="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onClick={() => setShowCaoNaEscolaModal(false)} />
+          <div className="flex min-h-screen items-center justify-center p-4 sm:p-6 lg:p-8">
+            <div className="relative w-full max-w-3xl bg-white dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/80 rounded-3xl p-6 sm:p-10 shadow-2xl transition-all max-h-[90vh] overflow-y-auto space-y-6">
+              
+              {/* Close Button */}
+              <button 
+                onClick={() => setShowCaoNaEscolaModal(false)}
+                className="absolute top-4 right-4 p-2 rounded-full text-zinc-400 hover:text-zinc-655 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
+              >
+                <X className="h-5 w-5" />
+              </button>
+
+              <div className="space-y-6 text-zinc-750 dark:text-zinc-300">
+                <div className="text-center space-y-2 border-b border-zinc-200/60 dark:border-zinc-800/60 pb-6">
+                  <span className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-600">Proposta Estratégica</span>
+                  <h2 className="text-2xl sm:text-3xl font-black text-zinc-900 dark:text-white uppercase tracking-wider">Cão na Escola</h2>
+                  <p className="text-xs text-zinc-400 font-bold uppercase tracking-widest">Educação, Empatia e Comunidade</p>
+                </div>
+
+                <div className="space-y-6 text-sm leading-relaxed font-medium">
+                  <p className="italic text-base text-zinc-900 dark:text-zinc-100 font-bold border-l-4 border-emerald-500 pl-4 py-1">
+                    "Aprender com quem ensina sem palavras."
+                  </p>
+                  
+                  <div className="space-y-2">
+                    <h3 className="text-lg font-extrabold text-zinc-900 dark:text-white uppercase tracking-wider">Enquadramento</h3>
+                    <p>
+                      Há um esquecimento que cresce nas nossas escolas, silencioso e persistente: o esquecimento do outro como ser vivo. Não o outro abstrato dos manuais, nem o outro distante das narrativas, mas o outro concreto, respirante, que olha, que sente, que responde.
+                    </p>
+                    <p>
+                      Educar tornou-se, demasiadas vezes, um exercício de palavras sem corpo. Fala-se de empatia, mas raramente se pratica. Invoca-se a responsabilidade, mas raramente se vive. Ensina-se a cidadania, mas esquece-se o gesto mais simples que a funda: cuidar.
+                    </p>
+                    <p>
+                      Propomos, por isso, um pequeno gesto de grande alcance: <strong>Um cão na escola.</strong> Não como ornamento. Não como distracção. Não como curiosidade passageira. Mas como presença. Como relação. Como exigência ética.
+                    </p>
+                  </div>
+
+                  <div className="h-[1px] bg-zinc-200/60 dark:bg-zinc-800" />
+
+                  <div className="space-y-2">
+                    <h3 className="text-lg font-extrabold text-zinc-900 dark:text-white uppercase tracking-wider">Objetivos Estratégicos</h3>
+                    <div className="grid gap-4 sm:grid-cols-2 mt-2">
+                      <div className="p-4 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200/60 dark:border-zinc-800/80 rounded-2xl">
+                        <h4 className="font-bold text-zinc-900 dark:text-white text-xs uppercase tracking-wider mb-1">1. Educação e Cidadania</h4>
+                        <p className="text-[11px] text-zinc-500 leading-normal">Desenvolvimento de empatia, responsabilidade e respeito pelos seres vivos. Promoção de valores éticos e sociais.</p>
+                      </div>
+                      <div className="p-4 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200/60 dark:border-zinc-800/80 rounded-2xl">
+                        <h4 className="font-bold text-zinc-900 dark:text-white text-xs uppercase tracking-wider mb-1">2. Bem-Estar e Saúde Mental</h4>
+                        <p className="text-[11px] text-zinc-500 leading-normal">Redução de ansiedade e stress em alunos. Melhoria do ambiente relacional e convivência escolar.</p>
+                      </div>
+                      <div className="p-4 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200/60 dark:border-zinc-800/80 rounded-2xl">
+                        <h4 className="font-bold text-zinc-900 dark:text-white text-xs uppercase tracking-wider mb-1">3. Política de Bem-Estar</h4>
+                        <p className="text-[11px] text-zinc-500 leading-normal">Integração responsável de cães locais, sensibilização contra o abandono e valorização da adoção.</p>
+                      </div>
+                      <div className="p-4 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200/60 dark:border-zinc-800/80 rounded-2xl">
+                        <h4 className="font-bold text-zinc-900 dark:text-white text-xs uppercase tracking-wider mb-1">4. Coesão Territorial</h4>
+                        <p className="text-[11px] text-zinc-500 leading-normal">Ligação estreita entre escola, comunidade e território, reforçando a identidade e património vivo.</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="h-[1px] bg-zinc-200/60 dark:bg-zinc-800" />
+
+                  <div className="space-y-2">
+                    <h3 className="text-lg font-extrabold text-zinc-900 dark:text-white uppercase tracking-wider">Garantias e Salvaguardas</h3>
+                    <p>
+                      O programa assenta em princípios de rigor absoluto: seleção comportamental criteriosa dos animais (temperamento equilibrado, sem agressividade ou reatividade), avaliação comportamental prévia, estado sanitário e vacinação estritamente controlados, e monitorização veterinária constante.
+                    </p>
+                    <p className="font-semibold text-emerald-700 dark:text-emerald-450">
+                      O bem-estar do animal é condição não negociável do projeto. Nenhum cão será colocado em contexto inadequado.
+                    </p>
+                  </div>
+
+                  <div className="h-[1px] bg-zinc-200/60 dark:bg-zinc-800" />
+
+                  <div className="space-y-2">
+                    <h3 className="text-lg font-extrabold text-zinc-900 dark:text-white uppercase tracking-wider">Modelo de Implementação</h3>
+                    <div className="space-y-3">
+                      <p>
+                        <strong>Fase 1 — Projeto-Piloto</strong>: Seleção de 1 a 3 escolas. Integração de cães previamente avaliados e monitorização intensiva dos impactos.
+                      </p>
+                      <p>
+                        <strong>Fase 2 — Avaliação</strong>: Emissão de relatórios de impacto pedagógico, comportamental e comunitário.
+                      </p>
+                      <p>
+                        <strong>Fase 3 — Expansão</strong>: Alargamento progressivo a outras escolas do município com base no feedback validado pelas universidades parceiras.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="h-[1px] bg-zinc-200/60 dark:bg-zinc-800" />
+
+                  <p className="text-center font-bold text-zinc-950 dark:text-white pt-2">
+                    Num tempo de crescente virtualização, o contacto com um animal pode ser uma das formas mais simples e eficazes de reconectar os alunos com a realidade, com o outro e com a responsabilidade.
                   </p>
                 </div>
 
